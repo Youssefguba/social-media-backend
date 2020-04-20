@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const {User, userSchema} = require('../models/user');
-const {Post} = require('../models/post');
+const {User} = require('../models/user');
+
 
 mongoose.connect('mongodb://localhost/ameen', {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => console.log('Connected to MongoDB...'))
@@ -18,19 +18,22 @@ async function addPost(userId, post) {
         console.log('No User Found!')
     }
 }
-addPost('5e9db18f332a414ae0f1b72d', new Post({body: 'Hello World Iam one '}));
+// addPost('5e9db18f332a414ae0f1b72d', new Post({body: 'Hello World Iam one '}));
 
 /* remove Post of User */
-// async function removePost(userId, postId){
-//         let user =  User.findById(userId).select('posts');
-//     //     if (user) {
-//     //     let post = user.posts.id(postId);
-//     //     post.remove();
-//     //     user.save();
-//     // } else {
-//     //     console.log(user);
-//     // }
-//       console.log(user.posts._id(postId));
-// }
-//
-// removePost('5e9db18f332a414ae0f1b72d', '5e9dbc49f636e64d08cc0b66');
+async function removePost(userId, postId){
+        let user =  await User.findById(userId).select('posts');
+    if (user){
+        let post = user.posts.id(postId);
+            if (post) {
+                post.remove();
+                user.save();
+            } else {
+                console.log('Post Not Found!');
+            }
+        } else {
+            console.log('User Not Found!');
+    }
+}
+
+// removePost('5e9db18f332a414ae0f1b72d', '5e9db1d5d696e5050473f703');
