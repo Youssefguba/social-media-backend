@@ -2,18 +2,17 @@ const mongoose = require('mongoose');
 const {User} = require('../models/user');
 const {Post} = require('../models/post');
 
-mongoose.connect('mongodb://localhost/ameen', {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(require('../../config/app').db.connectionUri, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => console.log('Connected to MongoDB...'))
     .catch(err => console.error('Could not connect to MongoDB...', err));
 
 
-let user_id;
+
 
 /* Create a new User */
 async function createUser(username, email){
     let user = new User({
         // Get User Id to use it with posts
-        [ user_id ]: new mongoose.Types.ObjectId(),
         username: username,
         email: email
     });
@@ -30,17 +29,19 @@ async function addPost(userId, post) {
         if (err) return handleError(err);
         if (user) {
             // Push Post to User Posts List
-            user.posts.authorId = user.id;
+            // user.posts.author_Id = user.id;
             user.posts.push(post);
             user.save();
-            console.log(user.posts.authorId)
+            console.log(user)
         } else {
             console.log('No User Found!')
+            console.log(user)
+
         }
     });
 
 }
-addPost('5e9df5ec32bc5d49e4b852f8', new Post({body: 'Hello World One!'}));
+addPost('5e9f6b04bacc67204056acb6', new Post({body: 'Hello World One!'}));
 
 /* remove Post of User */
 async function deletePost(userId, postId){

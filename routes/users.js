@@ -9,8 +9,8 @@ router.get('/', async (req, res) => {
 });
 
 
-router.get('/:userId', async (req, res) => {
-   let user = await User.findById(req.params.userId)
+router.get('/:id', async (req, res) => {
+   let user = await User.findById(req.params.id)
        .select('username email posts');
    if (!user) return res.status(404).send('User is not found!.');
 
@@ -18,8 +18,9 @@ router.get('/:userId', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const {error} = validate(req.body);
+    const  error  = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
+
     let user = new User({
         username: req.body.username,
         email:req.body.email,
@@ -27,4 +28,5 @@ router.post('/', async (req, res) => {
     user = await user.save();
     res.send(user);
 });
+
 module.exports = router;

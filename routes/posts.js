@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const app = express.Router();
 const {Post, validate}  = require('../utils/models/post')
 
 /*  GET Posts Listing */
@@ -9,25 +10,23 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:postId', async (req, res) => {
-    let post = await Post.findOne(req.params.postId)
-        .select('body');
+    let post = await Post.findById(req.params.postId);
     if (!post) return res.status(404).send('Post is not found!.');
 
     res.send(post);
 });
 
-
 router.post('/', async (req, res) => {
     let post = new Post({
         body: req.body.body,
         createdAt: Date.now(),
-        author: req.author,
-        authorId: req.author_Id
+        comments: req.body.comments,
     });
-
     post = await post.save();
     res.send(post);
 });
+
+
 
 router.put('/:postId', async (req, res) => {
     const {error} = validate(req.body)

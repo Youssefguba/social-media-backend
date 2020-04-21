@@ -6,7 +6,8 @@ const { User } = require("../models/user");
 const postSchema = new mongoose.Schema({
     post_id: mongoose.Schema.Types.ObjectId,
     body: String, // => "Any Example"
-    author_Id:  String,
+    authorId:String,
+    comments: Number, // Numbers of Comments
     author: {
         type:mongoose.Schema.Types.ObjectId,
         ref:'User',
@@ -25,7 +26,6 @@ const postSchema = new mongoose.Schema({
         recommended: Number,
         forbidden: Number
     }],
-    comments: Number, // Numbers of Comments
 });
 
 function validatePost(post){
