@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const {User} = require('../models/user');
 const {Post} = require('../models/post');
 
@@ -6,21 +7,46 @@ mongoose.connect(require('../../config/app').db.connectionUri, {useNewUrlParser:
     .then(() => console.log('Connected to MongoDB...'))
     .catch(err => console.error('Could not connect to MongoDB...', err));
 
-
-
-
 /* Create a new User */
-async function createUser(username, email){
-    let user = new User({
-        // Get User Id to use it with posts
-        username: username,
-        email: email
-    });
-    user.save(function (err) {
-        if (err) return handleError(err);
+/*****
+ usage:
+ var opt = {
+		username:'my_name',
+		password:'P@sSW0rD',
+		fn:'Divy',
+		ln:'Srivastava',
+
+	}
+ createNewUser(opt, (error, result)=> {
+		if(!result) return false;
+		// Do some post-save stuff here
+	})
+ *****/
+function createNewUser(obj, cb) {
+    User.findOne({email: obj.email}).exec(async (err, user) => {
+        if (user) {
+            console.log('User is found!');
+            return cb(null, false);
+        } else {
+            let newUser = new User({
+                username: obj.username,
+                first_name: obj.first_name,
+                last_name: obj.last_name,
+                email: obj.email,
+                birthday: obj.birthday,
+                profile_pic: "PUT Here default photo",
+                followers: [],
+                following: [],
+                notification: [],
+                posts: [],
+                isActive: true,
+            });
+            // const salt = await bcrypt.genSalt(10);
+            // newUser.password = await bcrypt.hash(newUser.password, salt);
+            await newUser.save();
+        }
     });
 }
-
 
 /* Add Post via User */
 async function addPost(userId, post) {
@@ -41,7 +67,7 @@ async function addPost(userId, post) {
     });
 
 }
-addPost('5e9f6b04bacc67204056acb6', new Post({body: 'Hello World One!'}));
+// addPost('5e9f6b04bacc67204056acb6', new Post({body: 'Hello World One!'}));
 
 /* remove Post of User */
 async function deletePost(userId, postId){

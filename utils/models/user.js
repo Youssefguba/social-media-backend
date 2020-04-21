@@ -5,6 +5,8 @@ const Joi = require('@hapi/joi');
 const userSchema = new mongoose.Schema({
     user_id: mongoose.Schema.Types.ObjectId,
     username: String,         //username
+    first_name: String,
+    last_name: String,
     email: String,            //email
     birthday: String,         //birthday
     profile_pic: String,      // /public/profile_pic/username/user.png
