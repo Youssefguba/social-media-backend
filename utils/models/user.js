@@ -1,30 +1,9 @@
 const mongoose = require('mongoose');
 const {postSchema} = require('../models/post');
-
-//
-// const postSchema = new mongoose.Schema({
-//     body: String, // => "Any Example"
-//     author:{
-//         ref:'User', //Ref for User Id
-//         type:mongoose.Schema.Types.ObjectId,
-//     },
-//     createdAt: {
-//         type: Date,
-//         default: Date.now
-//     }, // => 12/12/2012 SAT 12:06 AM
-//     badge:[{ // Badges of the post will appear when any of items > 50.
-//         isRecommended: Boolean,
-//         isForbidden: Boolean
-//     }],
-//     reactions: [{ // Number of Reactions on post.
-//         ameen: Number,
-//         recommended: Number,
-//         forbidden: Number
-//     }],
-//     comments: Number, // Numbers of Comments
-// });
+const Joi = require('@hapi/joi');
 
 const userSchema = new mongoose.Schema({
+    user_id: mongoose.Schema.Types.ObjectId,
     username: String,         //username
     email: String,            //email
     birthday: String,         //birthday
@@ -42,10 +21,16 @@ const userSchema = new mongoose.Schema({
     chat_rooms: Array,        // Chats page of User.
 });
 
-//
-//
-// module.exports.Post = mongoose.model('Post', postSchema);
-// module.exports.postSchema = postSchema;
+function validateUser(post){
+    const schema = Joi.object().keys({
+        username: Joi.string().required(),
+        email: Joi.string().required.email,
+    });
+    schema.validate(post)
+}
 
-module.exports.User  = mongoose.model('User', userSchema);
-module.exports.userSchema  = userSchema;
+module.exports = {
+    User: mongoose.model('User', userSchema),
+    userSchema: userSchema,
+    validate: validateUser
+}

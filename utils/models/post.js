@@ -1,11 +1,16 @@
 const mongoose = require('mongoose');
+const Joi = require('@hapi/joi');
+const { User } = require("../models/user");
 
 
 const postSchema = new mongoose.Schema({
+    post_id: mongoose.Schema.Types.ObjectId,
     body: String, // => "Any Example"
-    author:{
-            ref:'User', //Ref for User Id
-            type:mongoose.Schema.Types.ObjectId,
+    author_Id:  String,
+    author: {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
+        field:'authorId' // use this field to get object id
     },
     createdAt: {
         type: Date,
@@ -23,5 +28,15 @@ const postSchema = new mongoose.Schema({
     comments: Number, // Numbers of Comments
 });
 
-module.exports.Post = mongoose.model('Post', postSchema);
-module.exports.postSchema = postSchema;
+function validatePost(post){
+    const schema = Joi.object().keys({
+        body: Joi.string().required(),
+    });
+    schema.validate(post)
+}
+
+module.exports = {
+    Post: mongoose.model('Post', postSchema),
+    postSchema: postSchema,
+    validate: validatePost
+}

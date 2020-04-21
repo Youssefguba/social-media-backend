@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 
 
 app.use("/users", userRouter);
-app.use("/posts", postRouter);
+app.use(`/posts`, postRouter);
 
 
 app.listen(4000, ()=> {console.log("Hello from our Listener")});

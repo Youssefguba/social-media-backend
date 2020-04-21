@@ -1,7 +1,6 @@
 const express = require('express');
-const app = express();
 const router = express.Router();
-const Post  = require('../utils/models/post')
+const {Post, validate}  = require('../utils/models/post')
 
 /*  GET Posts Listing */
 router.get('/', async (req, res) => {
@@ -9,8 +8,8 @@ router.get('/', async (req, res) => {
     res.send(post);
 });
 
-router.get('/:id', async (req, res) => {
-    let post = await Post.findById(req.params.id)
+router.get('/:postId', async (req, res) => {
+    let post = await Post.findOne(req.params.postId)
         .select('body');
     if (!post) return res.status(404).send('Post is not found!.');
 
@@ -21,10 +20,21 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
     let post = new Post({
         body: req.body.body,
-        createdAt: Date.now()
+        createdAt: Date.now(),
+        author: req.author,
+        authorId: req.author_Id
     });
 
     post = await post.save();
+    res.send(post);
+});
+
+router.put('/:postId', async (req, res) => {
+    const {error} = validate(req.body)
+    if (error) return res.status(400).send(error.details[0].message);
+    let post = await Post.findOneAndUpdate(req.params.postId, {body: req.body.body}, {new: true});
+    if (!post) return res.status(404).send('User is not found!.');
+
     res.send(post);
 });
 
