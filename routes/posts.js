@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const app = express.Router();
 const {Post, validate}  = require('../utils/models/post')
 
 /*  GET Posts Listing */
@@ -21,6 +20,7 @@ router.post('/', async (req, res) => {
         body: req.body.body,
         createdAt: Date.now(),
         comments: req.body.comments,
+        authorId: req.body.authorId,
     });
     post = await post.save();
     res.send(post);

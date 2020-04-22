@@ -7,8 +7,9 @@ require('dotenv/config');
 // Routes
 const userRouter = require('./routes/users');
 const postRouter = require('./routes/posts');
+const indexRouter = require('./routes/index');
 
-mongoose.connect(require('../../config/app').db.connectionUri, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(require('./config/app').db.connectionUri, {useNewUrlParser: true, useUnifiedTopology: true})
     .then(() => console.log('Connected to MongoDB...'))
     .catch(err => console.error('Could not connect to MongoDB...', err));
 
@@ -18,7 +19,8 @@ app.use(bodyParser.json());
 
 
 app.use("/users", userRouter);
-app.use(`/posts`, postRouter);
+app.use("/posts", postRouter);
+app.use("/", indexRouter);
 
 
 app.listen(4000, ()=> {console.log("Hello from our Listener")});

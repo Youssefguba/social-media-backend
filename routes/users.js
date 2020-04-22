@@ -24,7 +24,17 @@ router.post('/', async (req, res) => {
     let user = new User({
         username: req.body.username,
         email:req.body.email,
+        first_name: req.body.first_name,
+        last_name: req.body.last_name,
+        birthday: req.body.birthday,
+        profile_pic: "PUT Here default photo",
+        followers: [],
+        following: [],
+        notification: [],
+        posts: [],
+        isActive: req.body.isActive
     });
+
     user = await user.save();
     res.send(user);
 });

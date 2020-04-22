@@ -1,17 +1,16 @@
 const mongoose = require('mongoose');
 const Joi = require('@hapi/joi');
-const { User } = require("../models/user");
+const { User, userSchema } = require("../models/user");
 
 
 const postSchema = new mongoose.Schema({
     post_id: mongoose.Schema.Types.ObjectId,
     body: String, // => "Any Example"
-    authorId:String,
+    authorId: mongoose.Types.ObjectId,
     comments: Number, // Numbers of Comments
     author: {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'User',
-        field:'authorId' // use this field to get object id
+        ref: 'User',
+        type: mongoose.Schema.Types.ObjectId
     },
     createdAt: {
         type: Date,
