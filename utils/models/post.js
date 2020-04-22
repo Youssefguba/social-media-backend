@@ -4,7 +4,7 @@ const { User, userSchema } = require("../models/user");
 
 
 const postSchema = new mongoose.Schema({
-    post_id: mongoose.Schema.Types.ObjectId,
+    postId: mongoose.Schema.Types.ObjectId,
     body: String, // => "Any Example"
     authorId: mongoose.Types.ObjectId,
     comments: Number, // Numbers of Comments

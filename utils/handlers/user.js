@@ -67,21 +67,30 @@ function createNewUser(obj, callback) {
  * */
 async function addPost(userId, obj) {
     //Find User By ID.
-    await User.findById(userId).populate('posts').exec(function(err,user){
+     await User.findById(userId).exec(function(err,user){
         if (user) {
             // Push Post to User Posts List
-            user.posts.push( new Post({
-                body:obj.body,
+            let newPost = new Post({
+                body: obj.body,
                 authorId: userId
-            }));
+            });
+            user.posts.push(newPost)
             user.save();
+            Post.find().exec(() => {
+                //TODO => Handle error if user is Anonymous
+                newPost.save();
+            })
+
             console.log(user)
         } else {
             console.log('No User Found!')
         }
     });
-
 }
+addPost("5e9fb9795bbd9b52905cc1e2", {
+    body: "Hello World Iam Youssef Ahmed Saeed",
+    authorId: "5e9fb9795bbd9b52905cc1e2"
+});
 
 
 /**

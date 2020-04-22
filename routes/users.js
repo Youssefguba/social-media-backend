@@ -9,8 +9,8 @@ router.get('/', async (req, res) => {
 });
 
 
-router.get('/:id', async (req, res) => {
-   let user = await User.findById(req.params.id)
+router.get('/:userId', async (req, res) => {
+   let user = await User.findById(req.params.userId)
        .select('username email posts');
    if (!user) return res.status(404).send('User is not found!.');
 
