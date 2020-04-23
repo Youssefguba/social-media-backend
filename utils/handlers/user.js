@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const {User} = require('../models/user');
 const {Post} = require('../models/post');
 
-mongoose.connect(require('../../config/app').db.connectionUri, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(require('../../config/app').db.connectionUri, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
     .then(() => console.log('Connected to MongoDB...'))
     .catch(err => console.error('Could not connect to MongoDB...', err));
 
@@ -58,14 +58,14 @@ function createNewUser(obj, callback) {
         }
     });
 }
-createNewUser( {username: "youssef",
-        first_name: "youssef",
-        last_name: "ahmed",
-        email:"youssef@gmail.com",
-        password: "adfafadsfasdfasdf"},
-    ()=> {
-        console.log("Hello There is Error Here")
-    });
+// createNewUser( {username: "youssef",
+//         first_name: "youssef",
+//         last_name: "ahmed",
+//         email:"youssef2@gmail.com",
+//         password: "adfafadsfasdfasdf"},
+//     ()=> {
+//         console.log("Hello There is Error Here")
+//     });
 
 /**
  * Add Post via User
@@ -92,23 +92,20 @@ async function addPost(userId, obj) {
         }
     });
 }
-addPost("5ea17e23b12cf433ac8eb0f8", {
-    body: "Hello World Iam Youssef Ahmed Saeed",
-    authorId: "5e9fb9795bbd9b52905cc1e2"
-});
-
+// addPost("5ea19b21b000443c2c0c1a2d", new Post({
+//     body: "Hello World!"
+// }))
 
 /**
- * remove Post of User
- * /**
- * Add Post via User
+ * Delete Post of User
+ *
  * usage:
  *     deletePost('5e9df5ec32bc5d49e4b852f8', '5e9e36c5742d5022e857e70a');
  * */
 
 async function deletePost(userId, postId){
     //Find User By ID.
-    let user =  await User.findById(userId).select('posts');
+    let user =  await User.findById(userId);
     if (user){
         // Find Post of User.
         let post = user.posts.id(postId);
@@ -122,4 +119,24 @@ async function deletePost(userId, postId){
             console.log('User Not Found!');
     }
 }
+
+async function updatePost(userId, postId, obj) {
+    //Find User By ID.
+    await User.findById(userId).exec(async (err, user) => {
+        if(!user) return console.log('User Not Found!');
+        // Find Body of post's user to change it's body.
+        user.posts.id(postId).body = obj.body;
+
+        await Post.findByIdAndUpdate(postId, {body: obj.body, authorId:userId}, { new: true }, async (err,post) => {
+            if (!post) return console.log("Post is not Found!")
+            await post.save();
+        });
+
+        user.posts.body = obj.body;
+        await user.save()
+    });
+
+}
+
+updatePost("5ea19b21b000443c2c0c1a2d", "5ea1bf3eebd1c336f0d2ec21", {body: "Hello !"})
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const user = express.Router();
-const {User, validate}  = require('../utils/models/user')
+const {User, validateUser}  = require('../utils/models/user')
 const {Post}  = require('../utils/models/post')
 
 /*  GET Users List */
@@ -19,7 +19,7 @@ user.get('/:userId', async (req, res) => {
 
 // Create a New User..
 user.post('/', async (req, res) => {
-    const  error  = validate(req.body);
+    const  error  = validateUser(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
     let user = new User({

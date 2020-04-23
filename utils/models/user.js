@@ -41,5 +41,5 @@ function validateUser(post){
 module.exports = {
     User: mongoose.model('User', userSchema),
     userSchema: userSchema,
-    validate: validateUser
+    validateUser: validateUser
 }
