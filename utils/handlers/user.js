@@ -106,19 +106,20 @@ async function addPost(userId, obj) {
 async function deletePost(userId, postId){
     //Find User By ID.
     let user =  await User.findById(userId);
+    let homePost = await Post.findById(postId);
+    //Find Post in Home Page and remove it..
+    !homePost ?  console.log("Post is not found") : homePost.remove();
     if (user){
-        // Find Post of User.
+        // Find Post in User Profile to remove it..
         let post = user.posts.id(postId);
-            if (post) { // Remove It and change in database.
-                post.remove();
-                user.save();
-            } else {
-                console.log('Post Not Found!');
-            }
+        // Remove post of user and save the changes..
+        post ? post.remove() && user.save() : console.log('Post Not Found!');
         } else {
             console.log('User Not Found!');
     }
 }
+// deletePost("5ea19b21b000443c2c0c1a2d", "5ea1f379c9cef51220d479dd");
+
 
 async function updatePost(userId, postId, obj) {
     //Find User By ID.
@@ -126,17 +127,14 @@ async function updatePost(userId, postId, obj) {
         if(!user) return console.log('User Not Found!');
         // Find Body of post's user to change it's body.
         user.posts.id(postId).body = obj.body;
-
         await Post.findByIdAndUpdate(postId, {body: obj.body, authorId:userId}, { new: true }, async (err,post) => {
             if (!post) return console.log("Post is not Found!")
             await post.save();
         });
-
         user.posts.body = obj.body;
         await user.save()
     });
 
 }
-
-updatePost("5ea19b21b000443c2c0c1a2d", "5ea1bf3eebd1c336f0d2ec21", {body: "Hello !"})
+// updatePost("5ea19b21b000443c2c0c1a2d", "5ea1bf3eebd1c336f0d2ec21", {body: "Hello !"})
 
