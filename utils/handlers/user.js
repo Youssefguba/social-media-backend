@@ -58,8 +58,6 @@ function createNewUser(obj, callback) {
         }
     });
 }
-
-
 /**
  * Add Post via User
  * usage:
@@ -87,10 +85,10 @@ async function addPost(userId, obj) {
         }
     });
 }
-addPost("5e9fb9795bbd9b52905cc1e2", {
-    body: "Hello World Iam Youssef Ahmed Saeed",
-    authorId: "5e9fb9795bbd9b52905cc1e2"
-});
+// addPost("5ea178e712f4c43b7c78008b", {
+//     body: "Hello World Iam Youssef Ahmed Saeed",
+//     authorId: "5ea178e712f4c43b7c78008b"
+// });
 
 
 /**

@@ -1,23 +1,24 @@
 const express = require('express');
-const router = express.Router();
+const user = express.Router();
 const {User, validate}  = require('../utils/models/user')
+const {Post}  = require('../utils/models/post')
 
-/*  GET Users Listing */
-router.get('/', async (req, res) => {
+/*  GET Users List */
+user.get('/', async (req, res) => {
     const user = await User.find();
     res.send(user);
 });
 
-
-router.get('/:userId', async (req, res) => {
+// Get a specific user with his info.
+user.get('/:userId', async (req, res) => {
    let user = await User.findById(req.params.userId)
        .select('username email posts');
    if (!user) return res.status(404).send('User is not found!.');
-
    res.send(user);
 });
 
-router.post('/', async (req, res) => {
+// Create a New User..
+user.post('/', async (req, res) => {
     const  error  = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
@@ -34,9 +35,23 @@ router.post('/', async (req, res) => {
         posts: [],
         isActive: req.body.isActive
     });
-
     user = await user.save();
     res.send(user);
 });
 
-module.exports = router;
+// Get a post that related to user.
+user.get('/:userId/:postId', async (req, res) => {
+    await User.findById(req.params.userId).exec(async (err, user) => {
+        if (user) {
+            await Post.findById(req.params.postId).exec(async (err, post)=>{
+                // Check if Post is existed or not!
+                !post ? res.status(404).send('Post is not found!') : res.send(post)
+            })
+        } else {
+            res.status(404).send('User is not Found!')
+            console.log(user);
+        }
+    });
+})
+
+module.exports = user;
