@@ -39,19 +39,5 @@ user.post('/', async (req, res) => {
     res.send(user);
 });
 
-// Get a post that related to user.
-user.get('/:userId/:postId', async (req, res) => {
-    await User.findById(req.params.userId).exec(async (err, user) => {
-        if (user) {
-            await Post.findById(req.params.postId).exec(async (err, post)=>{
-                // Check if Post is existed or not!
-                !post ? res.status(404).send('Post is not found!') : res.send(post)
-            })
-        } else {
-            res.status(404).send('User is not Found!')
-            console.log(user);
-        }
-    });
-})
 
 module.exports = user;

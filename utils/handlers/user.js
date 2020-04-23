@@ -58,6 +58,15 @@ function createNewUser(obj, callback) {
         }
     });
 }
+createNewUser( {username: "youssef",
+        first_name: "youssef",
+        last_name: "ahmed",
+        email:"youssef@gmail.com",
+        password: "adfafadsfasdfasdf"},
+    ()=> {
+        console.log("Hello There is Error Here")
+    });
+
 /**
  * Add Post via User
  * usage:
@@ -78,17 +87,15 @@ async function addPost(userId, obj) {
                 //TODO => Handle error if user is Anonymous
                 newPost.save();
             })
-
-            console.log(user)
         } else {
             console.log('No User Found!')
         }
     });
 }
-// addPost("5ea178e712f4c43b7c78008b", {
-//     body: "Hello World Iam Youssef Ahmed Saeed",
-//     authorId: "5ea178e712f4c43b7c78008b"
-// });
+addPost("5ea17e23b12cf433ac8eb0f8", {
+    body: "Hello World Iam Youssef Ahmed Saeed",
+    authorId: "5e9fb9795bbd9b52905cc1e2"
+});
 
 
 /**

@@ -1,6 +1,6 @@
 const express = require('express');
 const home = express.Router({mergeParams:true});
-const {Post} = require('../utils/models/post');
+const {Post, validatePost} = require('../utils/models/post');
 const {User} = require('../utils/models/user');
 
 
@@ -53,18 +53,20 @@ home.get('/users/:userId/:postId', async (req, res) => {
     });
 })
 
-home.post('/', async (req, res) => {
-    let post = new Post({
-        body: req.body.body,
-        createdAt: Date.now(),
-        comments: req.body.comments,
-        authorId: req.body.authorId,
-    });
-    const user = await User.findById(post.authorId);
-    if (!user) return res.status(400).send('User is not found!');
-    post = await post.save();
+/*
+* Update Post
+* */
+home.put(['/:postId','/users/:userId/:postId'], async (req, res) => {
+    const error = validatePost(req.body)
+    if (error) return res.status(400).send(error.details[0].message);
+    let post = await Post.findByIdAndUpdate(req.params.postId, {body: req.body.body}, {new: true});
+    if (!post) return res.status(404).send('Post is not found!.');
+    if (post.body == "") return res.send(400).send(error.details[0].message);
+
     res.send(post);
 });
+
+
 
 
 module.exports = home;

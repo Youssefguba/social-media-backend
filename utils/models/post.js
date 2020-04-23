@@ -37,5 +37,5 @@ function validatePost(post){
 module.exports = {
     Post: mongoose.model('Post', postSchema),
     postSchema: postSchema,
-    validate: validatePost
+    validatePost: validatePost
 }
