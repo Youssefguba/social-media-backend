@@ -186,7 +186,6 @@ async function addComment(authorId, postId, obj) {
                 authorName: user.username,
                 postId: postId
             });
-
             // Push Comment for Post collection.
             post.comments.push(newComment);
             await post.save(newComment);

@@ -1,6 +1,6 @@
 const express = require('express');
 const home = express.Router({mergeParams:true});
-const {Post, validatePost} = require('../utils/models/post');
+const {Post, validatePost, Comment} = require('../utils/models/post');
 const {User} = require('../utils/models/user');
 
 /*
@@ -20,6 +20,16 @@ home.get('/', async (req, res) => {
 home.get('/:postId', async (req, res) => {
     let posts = await Post.findById(req.params.postId);
     res.send(posts)
+})
+
+/*
+* Get Comment of post
+* */
+home.get('/:postId/:commentId', async (req, res) => {
+     let comment = await Post.findById(req.params.postId).then(post =>
+         post.comments.findById(req.params.commentId)
+     );
+    res.send(comment)
 })
 
 /*
@@ -92,7 +102,13 @@ home.delete(['/:postId','/users/:userId/:postId'], async (req, res) => {
     res.send(post);
 });
 
+/*
+* Add comment
+* */
 
+home.post(['/:postId/:commentId', '/users/:userId/:postId/:commentId'], async (req, res) => {
+
+})
 
 
 
