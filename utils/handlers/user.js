@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const {User} = require('../models/user');
-const {Post} = require('../models/post');
+const {Post, Comment} = require('../models/post');
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy;
 
 mongoose.connect(require('../../config/app').db.connectionUri, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
     .then(() => console.log('Connected to MongoDB...'))
     .catch(err => console.error('Could not connect to MongoDB...', err));
-
 
 /**
  *
@@ -27,7 +28,6 @@ mongoose.connect(require('../../config/app').db.connectionUri, {useNewUrlParser:
    ()=> {
     console.log("Hello There is Error Here")
 });
-
  **/
 function createNewUser(obj, callback) {
     User.findOne({email: obj.email}).exec(async (err, user) => {
@@ -67,6 +67,28 @@ function createNewUser(obj, callback) {
 //         console.log("Hello There is Error Here")
 //     });
 
+/* Login User */
+// passport.use(new LocalStrategy({
+//         emailField: 'email',
+//         passwordField: 'password'
+//     },
+//     async function loginUser (email, password, done) {
+//         User.findOne({ email: email }, function(err, user) {
+//             if (err) { return done(err); }
+//             if (!user) {
+//                 return done(null, false, { message: 'Incorrect username.' });
+//             }
+//             if (!user.validPassword(password)) {
+//                 return done(null, false, { message: 'Incorrect password.' });
+//             }
+//             return done(null, user);
+//         });
+//     },
+// ));
+//
+
+
+
 /**
  * Add Post via User
  * usage:
@@ -79,7 +101,8 @@ async function addPost(userId, obj) {
             // Push Post to User Posts List
             let newPost = new Post({
                 body: obj.body,
-                authorId: userId
+                authorId: userId,
+                authorName: user.username,
             });
             user.posts.push(newPost)
             user.save();
@@ -92,8 +115,8 @@ async function addPost(userId, obj) {
         }
     });
 }
-// addPost("5ea19b21b000443c2c0c1a2d", new Post({
-//     body: "Hello World!"
+// addPost("5ea4f40392b19a16a4a75c03", new Post({
+//     body: "Hello World One!"
 // }))
 
 /**
@@ -120,6 +143,12 @@ async function deletePost(userId, postId){
 }
 // deletePost("5ea19b21b000443c2c0c1a2d", "5ea1f379c9cef51220d479dd");
 
+/**
+ * Update Post of User
+ *
+ * usage:
+ *     updatePost('5e9df5ec32bc5d49e4b852f8', '5e9e36c5742d5022e857e70a', {body: "Change Happened!!"});
+ * */
 
 async function updatePost(userId, postId, obj) {
     //Find User By ID.
@@ -137,4 +166,40 @@ async function updatePost(userId, postId, obj) {
 
 }
 // updatePost("5ea19b21b000443c2c0c1a2d", "5ea1bf3eebd1c336f0d2ec21", {body: "Hello !"})
+
+/**
+ * add comment on Post of User
+ *
+ * usage:
+ *     addComment('5e9df5ec32bc5d49e4b852f8', '5e9e36c5742d5022e857e70a', {comment_body: "Change Happened!!"});
+ * */
+
+async function addComment(authorId, postId, obj) {
+    // Find User By ID => then find Post by Id
+    let user =  await User.findById(authorId);
+    let post =  await Post.findById(postId);
+    if (user) {
+        if (post) { // Add comment properties.
+            let newComment = new Comment({
+                comment_body: obj.comment_body,
+                authorId: authorId,
+                authorName: user.username,
+                postId: postId
+            });
+
+            // Push Comment for Post collection.
+            post.comments.push(newComment);
+            await post.save(newComment);
+            // Push Comment for Comment collection.
+            await newComment.save();
+            // Find comment of post's user to push comment to it.. then save to User Collection.
+            user.posts.id(postId).comments.push(newComment);
+            await user.save();
+        }
+    }
+}
+
+// addComment("5ea4f40392b19a16a4a75c03", "5ea4f91417149441fc32154c", {comment_body: "Hello Every Twoooooooooooo"})
+
+
 

@@ -32,7 +32,6 @@ home.post(['/','/users/:userId'], async (req, res) => {
         let newPost = new Post({
             body: req.body.body,
             createdAt: Date.now(),
-            comments: req.body.comments,
             authorId: req.params.userId,
         });
         // Push post to (User.posts) List => {'/users/:userId'} route
