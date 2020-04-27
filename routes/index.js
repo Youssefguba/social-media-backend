@@ -135,7 +135,6 @@ home.post(['/:postId', '/users/:userId/:postId'], async (req, res) => {
 * Remove a comment
 * */
 home.delete(['/:postId/:commentId', '/users/:userId/:postId/:commentId'], async (req, res) => {
-
     await Post.findById(req.params.postId).exec(async (err, post) => {
         if (!post) return res.status(404).send("Post is not Found!")
         // Find comment by Id..
@@ -153,7 +152,6 @@ home.delete(['/:postId/:commentId', '/users/:userId/:postId/:commentId'], async 
         comment.remove();
         user.save()
     })
-
     // Remove comment from Comment collection.
     let comment = await Comment.findByIdAndDelete(req.params.commentId);
     if (!comment) return res.status(404).send("Comment is not Found!");

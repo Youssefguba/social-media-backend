@@ -136,12 +136,13 @@ async function deletePost(userId, postId){
         // Find Post in User Profile to remove it..
         let post = user.posts.id(postId);
         // Remove post of user and save the changes..
-        post ? post.remove() && user.save() : console.log('Post Not Found!');
+        post ? post.remove() : console.log('Post Not Found!');
+        user.save()
         } else {
             console.log('User Not Found!');
     }
 }
-// deletePost("5ea19b21b000443c2c0c1a2d", "5ea1f379c9cef51220d479dd");
+// deletePost("5ea4f40392b19a16a4a75c03", "5ea4f91417149441fc32154c");
 
 /**
  * Update Post of User
@@ -171,7 +172,7 @@ async function updatePost(userId, postId, obj) {
  * add comment on Post of User
  *
  * usage:
- *     addComment('5e9df5ec32bc5d49e4b852f8', '5e9e36c5742d5022e857e70a', {comment_body: "Change Happened!!"});
+ *     addComment(authorId, postId, {comment_body: "Change Happened!!"});
  * */
 
 async function addComment(authorId, postId, obj) {
@@ -179,7 +180,8 @@ async function addComment(authorId, postId, obj) {
     let user =  await User.findById(authorId);
     let post =  await Post.findById(postId);
     if (user) {
-        if (post) { // Add comment properties.
+        if (post) {
+            // Add comment properties.
             let newComment = new Comment({
                 comment_body: obj.comment_body,
                 authorId: authorId,
@@ -197,8 +199,41 @@ async function addComment(authorId, postId, obj) {
         }
     }
 }
+// addComment("5ea4f40392b19a16a4a75c03","5ea656697a6dae47cc3007c2", {comment_body: "Hello Every One.."})
 
-// addComment("5ea4f40392b19a16a4a75c03", "5ea4f91417149441fc32154c", {comment_body: "Hello Every Twoooooooooooo"})
+/**
+ * delete comment on Post of User
+ *
+ * usage:
+ *     deleteComment(userId, postId, commentId);
+ * */
+async function deleteComment(userId, postId, commentId) {
+    //Find User & Post & Comment By ID.
+    let user =  await User.findById(userId);
+    let post =  await Post.findById(postId);
+    let collection_comment = await Comment.findById(commentId);
+
+    //Find Comment in Comment Collection and remove it..
+    if (user){
+        if (post){
+            // Find comment in (User & Post) Collections to remove it..
+            let user_collection_comment = await user.posts.id(postId).comments.id(commentId);
+            let post_collection_comment = await post.comments.id(commentId);
+
+            // Remove post of user and save the changes..
+            user_collection_comment ? await user_collection_comment.remove() : console.log("Comment is not found");
+            post_collection_comment ? await post_collection_comment.remove() : console.log("Comment is not found");
+            collection_comment      ? await collection_comment.remove()      : console.log("Comment is not found");
+            user.save();
+            post.save();
+            collection_comment.save();
+
+        } else { console.log('Post Not Found!') }
+        } else { console.log('User Not Found!') }
+
+}
+
+deleteComment("5ea4f40392b19a16a4a75c03","5ea656697a6dae47cc3007c2","5ea656b14aafc92110aa1578")
 
 
 
