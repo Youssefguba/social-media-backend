@@ -43,6 +43,7 @@ home.post(['/','/users/:userId'], async (req, res) => {
             body: req.body.body,
             createdAt: Date.now(),
             authorId: req.params.userId,
+            //TODO => Add Username of user in "authorName"..
         });
         // Push post to (User.posts) List => {'/users/:userId'} route
         user.posts.push(newPost);
@@ -105,9 +106,30 @@ home.delete(['/:postId','/users/:userId/:postId'], async (req, res) => {
 /*
 * Add comment
 * */
+home.post(['/:postId', '/users/:userId/:postId'], async (req, res) => {
 
-home.post(['/:postId/:commentId', '/users/:userId/:postId/:commentId'], async (req, res) => {
+      await Post.findById(req.params.postId).exec(async (err, post) => {
+          let newComment = new Comment({
+              comment_body: req.body.comment_body,
+              authorId: req.params.userId || post.authorId,
+              postId: req.params.postId,
+              authorName: post.authorName
+          });
 
+        if (!post) return res.status(404).send("Post is not Found!");
+        //find the post of user to push comment for it for posts collection..
+        await post.comments.push(newComment)
+        post.save()
+
+        //find the user to push comment for it for User collection..
+        await User.findById(req.params.userId || post.authorId).exec(async (err, user) => {
+            await user.posts.id(req.params.postId).comments.push(newComment)
+            user.save()
+         })
+          // Save comment for Comment Collection..
+          newComment.save()
+          res.send(newComment)
+    })
 })
 
 
