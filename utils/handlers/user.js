@@ -286,5 +286,3 @@ async function followUser(userId, followedPersonId) {
     followedPerson.save();
 
 }
-
-// followUser("5ea673a3e674c34564009531", "5ea673ab0a30833f501da496")
