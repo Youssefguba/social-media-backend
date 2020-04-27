@@ -234,27 +234,57 @@ async function followUser(userId, followedPersonId) {
     let user = await User.findById(userId);
     let followedPerson = await User.findById(followedPersonId);
 
-    // Person who press follow
+    let followedMemberId =  await user.following.find(function(followed){
+        return followed.member_id === followedPersonId;
+    })
+
+    let followerMemberId = await followedPerson.followers.find(function (follower) {
+        return follower.member_id === userId;
+    })
+
+    /*
+    * Adding follower person to followers list ..
+    * Begin
+    * */
     let user_schema = {
         follower_name: user.username,
         member_id: userId,
         profile_pic: user.profile_pic,
     }
-    await followedPerson.followers.push(user_schema)
+    // Check if User already in followers list or not.
+    if (!followerMemberId) {
+        await followedPerson.followers.push(user_schema)
+    } else {
+        console.log("You Already followed that person!")
+    }/*
+    * Adding follower person to followers list ..
+    * End
+    * */
 
-    // Followed Person..
+
+    /*
+    * Adding followed person to following list ..
+    * Begin
+    * */
     let followedPerson_schema = {
         followed_name: followedPerson.username,
         member_id:     followedPersonId,
         profile_pic:   followedPerson.profile_pic,
     }
-    await user.following.push(followedPerson_schema)
+    if (!followedMemberId){
+        await user.following.push(followedPerson_schema)
+    } else {
+        console.log("User is already followed!");
+    }
+    /*
+    * Adding followed person to following list ..
+    * End
+    * */
 
-    console.log(await user.following.hasOwnProperty(followedPersonId.toString()))
 
     user.save();
     followedPerson.save();
 
 }
 
-followUser("5ea673a3e674c34564009531", "5ea673ab0a30833f501da496")
+// followUser("5ea673a3e674c34564009531", "5ea673ab0a30833f501da496")

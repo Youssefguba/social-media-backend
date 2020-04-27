@@ -24,8 +24,8 @@ const userSchema = new mongoose.Schema({
     isActive: Boolean,   // Status of User Active or !Active
     isAdministrator: {type: Boolean, default: false},   // user isAdministrator or !
     chat_rooms: Array,
-    followers: [{member_id: String, follower_name: String, profile_pic: String}], //['Ahmed Mohamed', 'Youssef mohamed']
-    following: [{member_id: String, followed_name: String, profile_pic: String}], //['Ahmed Mohamed', 'Youssef mohamed']
+    followers: [{member_id: mongoose.Schema.Types.ObjectId, follower_name: String, profile_pic: String}], //['Ahmed Mohamed', 'Youssef mohamed']
+    following: [{member_id: mongoose.Schema.Types.ObjectId, followed_name: String, profile_pic: String}], //['Ahmed Mohamed', 'Youssef mohamed']
     profile_pic: String,    // /public/profile_pic/username/user.png
     notification: Array,   // List of Notification of user
     joined_date: {
