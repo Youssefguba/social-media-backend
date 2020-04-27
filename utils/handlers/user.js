@@ -220,10 +220,11 @@ async function deleteComment(userId, postId, commentId) {
             let user_collection_comment = await user.posts.id(postId).comments.id(commentId);
             let post_collection_comment = await post.comments.id(commentId);
 
-            // Remove post of user and save the changes..
+            // Remove post of user in ( User & Post & Comment ) Collections..
             user_collection_comment ? await user_collection_comment.remove() : console.log("Comment is not found");
             post_collection_comment ? await post_collection_comment.remove() : console.log("Comment is not found");
             collection_comment      ? await collection_comment.remove()      : console.log("Comment is not found");
+            // Save the changes in ( User & Post & Comment ) Collections..
             user.save();
             post.save();
             collection_comment.save();
@@ -233,7 +234,7 @@ async function deleteComment(userId, postId, commentId) {
 
 }
 
-deleteComment("5ea4f40392b19a16a4a75c03","5ea656697a6dae47cc3007c2","5ea656b14aafc92110aa1578")
+// deleteComment("5ea4f40392b19a16a4a75c03","5ea656697a6dae47cc3007c2","5ea656b14aafc92110aa1578")
 
 
 
