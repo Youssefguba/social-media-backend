@@ -90,7 +90,6 @@ home.put(['/:postId','/users/:userId/:postId'], async (req, res) => {
 });
 
 
-
 /*
 * Delete Post
 * */
@@ -107,8 +106,8 @@ home.delete(['/:postId','/users/:userId/:postId'], async (req, res) => {
 * Add comment
 * */
 home.post(['/:postId', '/users/:userId/:postId'], async (req, res) => {
-
       await Post.findById(req.params.postId).exec(async (err, post) => {
+          // Create a new comment..
           let newComment = new Comment({
               comment_body: req.body.comment_body,
               authorId: req.params.userId || post.authorId,
@@ -132,6 +131,33 @@ home.post(['/:postId', '/users/:userId/:postId'], async (req, res) => {
     })
 })
 
+/*
+* Remove a comment
+* */
+home.delete(['/:postId/:commentId', '/users/:userId/:postId/:commentId'], async (req, res) => {
 
+    await Post.findById(req.params.postId).exec(async (err, post) => {
+        if (!post) return res.status(404).send("Post is not Found!")
+        // Find comment by Id..
+        let comment =  post.comments.id(req.params.commentId);
+        //Check if comment is existed or not to remove it
+        comment ?  await comment.remove() : res.status(404).send("Comment is not Found!") ;
+        post.save();
+    })
+    await User.findById(req.params.userId).exec(async (err, user) =>{
+        if (!user) return res.status(404).send("User is not Found!")
+        // Remove comment from User collection.
+        let comment =  user.posts.id(req.params.postId).comments.id(req.params.commentId)
+        //Check if comment is existed or not to remove it
+        comment ? await comment.remove() : res.status(404).send("Comment is not Found!") ;
+        comment.remove();
+        user.save()
+    })
+
+    // Remove comment from Comment collection.
+    let comment = await Comment.findByIdAndDelete(req.params.commentId);
+    if (!comment) return res.status(404).send("Comment is not Found!");
+    res.send(comment);
+})
 
 module.exports = home;
