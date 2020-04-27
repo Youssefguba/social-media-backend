@@ -2,11 +2,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const {User} = require('../models/user');
 const {Post, Comment} = require('../models/post');
-const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy;
 
 mongoose.connect(require('../../config/app').db.connectionUri, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
-    .then(() => console.log('Connected to MongoDB...'))
+    .then(()   => console.log('Connected to MongoDB...'))
     .catch(err => console.error('Could not connect to MongoDB...', err));
 
 /**
@@ -24,7 +22,7 @@ mongoose.connect(require('../../config/app').db.connectionUri, {useNewUrlParser:
   first_name: "youssef",
    last_name: "ahmed",
     email:"you1@gmail.com",
-     password: "adfafadsfasdfasdf"},
+     password: "adfafadsfasdfasdf" },
    ()=> {
     console.log("Hello There is Error Here")
 });
@@ -58,10 +56,10 @@ function createNewUser(obj, callback) {
         }
     });
 }
-// createNewUser( {username: "youssef",
-//         first_name: "youssef",
-//         last_name: "ahmed",
-//         email:"youssef2@gmail.com",
+// createNewUser( {username: "Ahmed",
+//         first_name: "Ahmed ",
+//         last_name: "Mohamed",
+//         email:"Ahmed2@gmail.com",
 //         password: "adfafadsfasdfasdf"},
 //     ()=> {
 //         console.log("Hello There is Error Here")
@@ -86,7 +84,6 @@ function createNewUser(obj, callback) {
 //     },
 // ));
 //
-
 
 
 /**
@@ -125,7 +122,6 @@ async function addPost(userId, obj) {
  * usage:
  *     deletePost('5e9df5ec32bc5d49e4b852f8', '5e9e36c5742d5022e857e70a');
  * */
-
 async function deletePost(userId, postId){
     //Find User By ID.
     let user =  await User.findById(userId);
@@ -150,7 +146,6 @@ async function deletePost(userId, postId){
  * usage:
  *     updatePost('5e9df5ec32bc5d49e4b852f8', '5e9e36c5742d5022e857e70a', {body: "Change Happened!!"});
  * */
-
 async function updatePost(userId, postId, obj) {
     //Find User By ID.
     await User.findById(userId).exec(async (err, user) => {
@@ -174,7 +169,6 @@ async function updatePost(userId, postId, obj) {
  * usage:
  *     addComment(authorId, postId, {comment_body: "Change Happened!!"});
  * */
-
 async function addComment(authorId, postId, obj) {
     // Find User By ID => then find Post by Id
     let user =  await User.findById(authorId);
@@ -199,7 +193,6 @@ async function addComment(authorId, postId, obj) {
         }
     }
 }
-// addComment("5ea4f40392b19a16a4a75c03","5ea656697a6dae47cc3007c2", {comment_body: "Hello Every One.."})
 
 /**
  * delete comment on Post of User
@@ -212,7 +205,6 @@ async function deleteComment(userId, postId, commentId) {
     let user =  await User.findById(userId);
     let post =  await Post.findById(postId);
     let collection_comment = await Comment.findById(commentId);
-
     //Find Comment in Comment Collection and remove it..
     if (user){
         if (post){
@@ -231,10 +223,38 @@ async function deleteComment(userId, postId, commentId) {
 
         } else { console.log('Post Not Found!') }
         } else { console.log('User Not Found!') }
+}
+
+/**
+ *
+ * Follow another person..
+ *
+ **/
+async function followUser(userId, followedPersonId) {
+    let user = await User.findById(userId);
+    let followedPerson = await User.findById(followedPersonId);
+
+    // Person who press follow
+    let user_schema = {
+        follower_name: user.username,
+        member_id: userId,
+        profile_pic: user.profile_pic,
+    }
+    await followedPerson.followers.push(user_schema)
+
+    // Followed Person..
+    let followedPerson_schema = {
+        followed_name: followedPerson.username,
+        member_id:     followedPersonId,
+        profile_pic:   followedPerson.profile_pic,
+    }
+    await user.following.push(followedPerson_schema)
+
+    console.log(await user.following.hasOwnProperty(followedPersonId.toString()))
+
+    user.save();
+    followedPerson.save();
 
 }
 
-// deleteComment("5ea4f40392b19a16a4a75c03","5ea656697a6dae47cc3007c2","5ea656b14aafc92110aa1578")
-
-
-
+followUser("5ea673a3e674c34564009531", "5ea673ab0a30833f501da496")

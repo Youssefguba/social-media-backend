@@ -1,33 +1,37 @@
 const mongoose = require('mongoose');
-const {postSchema} = require('../models/post');
+const { postSchema } = require('../models/post');
 const Joi = require('@hapi/joi');
 const bcrypt = require('bcrypt');
 
 
 const userProfile = mongoose.Schema({
-    followers: [{"member_id": String, "follower_name": String, "profile_pic": String}], //['Ahmed Mohamed', 'Youssef mohamed']
-    following: [{"member_id": String, "follower_name": String, "profile_pic": String}], //['Ahmed Mohamed', 'Youssef mohamed']
-    chat_rooms: Array,        // Chats page of User.
-    notification: Array,      //List of Notification of user
+
+    user_ref: {
+        ref: 'User',
+        type: mongoose.Schema.ObjectId,
+    },
 })
 
 const userSchema = new mongoose.Schema({
     userId: mongoose.Schema.Types.ObjectId,
-    username: String,         //username
+    username:   String,    //username
     first_name: String,
-    last_name: String,
-    email: {type: String, unique: true},            //email
-    password: String,
-    birthday: String,         //birthday
+    last_name:  String,
+    email: {type: String, unique: true},   //email
+    password:   String,
+    birthday:   String,    //birthday
     posts: [postSchema],
-    isActive: Boolean,        // Status of User Active or !Active
-    isAdministrator: {type: Boolean, default: false}, // user isAdministrator or !
-    user_profile: [userProfile],
-    profile_pic: String,      // /public/profile_pic/username/user.png
+    isActive: Boolean,   // Status of User Active or !Active
+    isAdministrator: {type: Boolean, default: false},   // user isAdministrator or !
+    chat_rooms: Array,
+    followers: [{member_id: String, follower_name: String, profile_pic: String}], //['Ahmed Mohamed', 'Youssef mohamed']
+    following: [{member_id: String, followed_name: String, profile_pic: String}], //['Ahmed Mohamed', 'Youssef mohamed']
+    profile_pic: String,    // /public/profile_pic/username/user.png
+    notification: Array,   // List of Notification of user
     joined_date: {
         type: Date,
         default: Date.now
-    },        // Date of User joined on it
+    },  // Date of User joined on it
 });
 
 // comparing if the password entered is correct
