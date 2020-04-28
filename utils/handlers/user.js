@@ -234,10 +234,12 @@ async function followUser(userId, followedPersonId) {
     let user = await User.findById(userId);
     let followedPerson = await User.findById(followedPersonId);
 
+    // Find Followed member Id in Following list of our User.
     let followedMemberId =  await user.following.find(function(followed){
         return followed.member_id === followedPersonId;
     })
 
+    // Find Follower member Id in Followers list of second user.
     let followerMemberId = await followedPerson.followers.find(function (follower) {
         return follower.member_id === userId;
     })
@@ -280,9 +282,32 @@ async function followUser(userId, followedPersonId) {
     * Adding followed person to following list ..
     * End
     * */
-
-
     user.save();
     followedPerson.save();
 
+}
+
+/**
+ *
+ * Un Follow another person..
+ *
+ **/
+async function unfollowUser(userId, followedPersonId ) {
+    let user = await User.findById(userId);
+    let followedPerson = await User.findById(followedPersonId);
+
+    // Find Followed member Id in Following list of our User to remove him from following list.
+    let followedMemberId =  await user.following.find(function(followed){
+        return followed.member_id
+    })
+    followedMemberId ? followedMemberId.remove() : console.log("You already unfollowed him.")
+
+    // Find Follower member Id in Followers list of second user to remove him from followers list.
+    let followerMemberId = await followedPerson.followers.find(function (follower) {
+        return follower.member_id;
+    })
+    followerMemberId ? followerMemberId.remove() : console.log("You already unfollowed him.")
+
+    user.save();
+    followedPerson.save();
 }
