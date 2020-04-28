@@ -39,5 +39,26 @@ user.post('/', async (req, res) => {
     res.send(user);
 });
 
+/*
+* Get list of user followers.
+* */
+user.get('/:userId/followers', async (req, res) => {
+    let user = await User.findById(req.params.userId).select('followers');
+    if (!user) return res.status(404).send('User is not found!.');
+    res.send(user);
+
+})
+
+/*
+* Get list of user following.
+* */
+user.get('/:userId/following', async (req, res) => {
+    let user = await User.findById(req.params.userId).select('following');
+    if (!user) return res.status(404).send('User is not found!.');
+    res.send(user);
+
+})
+
+
 
 module.exports = user;
