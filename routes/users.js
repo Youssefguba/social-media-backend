@@ -56,9 +56,16 @@ user.get('/:userId/following', async (req, res) => {
     let user = await User.findById(req.params.userId).select('following');
     if (!user) return res.status(404).send('User is not found!.');
     res.send(user);
-
 })
 
+/*
+* Get list of user saved post.
+* */
+user.get('/:userId/saved', async (req, res) => {
+    let user = await User.findById(req.params.userId).select('saved_posts');
+    if (!user) return res.status(404).send('User is not found!.');
+    res.send(user);
+})
 
 
 module.exports = user;

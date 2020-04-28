@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
     password:   String,
     birthday:   String,    //birthday
     posts: [postSchema],
+    saved_posts: [postSchema],
     isActive: Boolean,   // Status of User Active or !Active
     isAdministrator: {type: Boolean, default: false},   // user isAdministrator or !
     chat_rooms: Array,

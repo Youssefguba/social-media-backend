@@ -312,3 +312,18 @@ async function unfollowUser(userId, followedPersonId ) {
     user.save();
     followedPerson.save();
 }
+
+async function savePost(userId, postId) {
+    let user = await User.findById(userId);
+    let post = await Post.findById(postId);
+
+    if (!user.saved_posts.id(postId)){
+        await user.saved_posts.push(post);
+    } else {
+        console.log("Post is already Saved!")
+    }
+
+    await user.save()
+}
+
+savePost("5ea673a3e674c34564009531","5ea656697a6dae47cc3007c2")
