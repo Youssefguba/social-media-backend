@@ -331,19 +331,133 @@ async function savePost(userId, postId) {
     await user.save()
 }
 
-async function ameen(userId, postId) {
+/*
+* Begin of  Add Reactions  [ Ameen , recommend , forbidden ]
+* */
+
+/* Ameen Reaction */
+async function ameenButton(userId, postId) {
     let user_info  = await User.findById(userId).select("id username profile_pic");
     let mainUser = await User.findById(userId);
     let post  = await Post.findById(postId);
     let _user = await User.findById(post.authorId);
+    // TODO (1) => Check if the user liked this post or not!
 
-    // TODO (1) => Check if the user already liked this post or not.
-    // TODO (2) => Check if the user is the owner of Post or not!
-
-    await mainUser.posts.id(postId).reactions.ameen.push(user_info);
-    console.log(await post.reactions.ameen.push(user_info))
+    /*
+    * We made this to make changes happen in database when user click on "Ameen" button..
+    * */
+    // (*) Check if the user is the owner of post or not..
+    // (1) If the user is /not/ the owner..
+    if (!(mainUser.posts.id(postId))) {
+        //.. then find the place of post in User collection to push post to the list..
+        await _user.posts.id(postId).reactions.ameen.push(user_info);
+        await post.reactions.ameen.push(user_info)
+    } else {
+        // (2) If the user is the Owner..
+        await mainUser.posts.id(postId).reactions.ameen.push(user_info);
+        await post.reactions.ameen.push(user_info)
+    }
     await mainUser.save();
     await post.save();
-
+    await _user.save();
 }
-ameen("5ea673ab0a30833f501da496","5ea8f1912c64f73b50a424a9")
+
+/* Recommend Button Reaction */
+async function recommendButton(userId, postId) {
+    let user_info  = await User.findById(userId).select("id username profile_pic");
+    let mainUser = await User.findById(userId);
+    let post  = await Post.findById(postId);
+    let _user = await User.findById(post.authorId);
+    // TODO (1) => Check if the user liked this post or not!
+    /*
+    * We made this to make changes happen in database when user click on "Ameen" button..
+    * */
+    // (*) Check if the user is the owner of post or not..
+
+    // (1) If the user is /not/ the owner..
+    if (!(mainUser.posts.id(postId))) {
+        //.. then find the place of post in User collection to push post to the list..
+            await _user.posts.id(postId).reactions.recommended.push(user_info);
+            await post.reactions.recommended.push(user_info)
+    } else {
+        // (2) If the user is the Owner..
+            // Check if already the user liked this post before or not.
+                await mainUser.posts.id(postId).reactions.recommended.push(user_info);
+                await post.reactions.recommended.push(user_info)
+    }
+    await mainUser.save();
+    await post.save();
+    await _user.save();
+}
+
+ /* Forbidden Button Reaction */
+async function forbiddenButton(userId, postId) {
+    let user_info  = await User.findById(userId).select("id username profile_pic");
+    let mainUser = await User.findById(userId);
+    let post  = await Post.findById(postId);
+    let _user = await User.findById(post.authorId);
+    // TODO (1) => Check if the user liked this post or not!
+
+    /*
+    * We made this to make changes happen in database when user click on "Ameen" button..
+    * */
+    // (*) Check if the user is the owner of post or not..
+    // (1) If the user is /not/ the owner..
+    if (!(mainUser.posts.id(postId))) {
+        //.. then find the place of post in User collection to push post to the list..
+            await _user.posts.id(postId).reactions.forbidden.push(user_info);
+            await post.reactions.forbidden.push(user_info)
+    } else {
+        // (2) If the user is the Owner..
+                await mainUser.posts.id(postId).reactions.forbidden.push(user_info);
+                await post.reactions.forbidden.push(user_info)
+            }
+    await mainUser.save();
+    await post.save();
+    await _user.save();
+}
+
+/*
+* End of Reactions Section [ Ameen , recommend , forbidden ]
+* */
+
+/*
+* Begin of Remove Reaction  [ Ameen , recommend , forbidden ]
+* */
+async function removeAmeenButton(userId, postId) {
+    let user_info  = await User.findById(userId).select("id username profile_pic");
+    let mainUser = await User.findById(userId);
+    let post  = await Post.findById(postId);
+    let _user = await User.findById(post.authorId);
+    // TODO (1) => Check if the user liked this post or not!
+
+    /*
+    * We made this to make changes happen in database when user click on "Ameen" button..
+    * */
+    // (*) Check if the user is the owner of post or not..
+    // (1) If the user is /not/ the owner..
+
+    //TODO remove the reaction of the user that liked the post ..
+    if (!(mainUser.posts.id(postId))) {
+        //.. then find the place of post in User collection to push post to the list..
+        await _user.posts.id(postId).reactions.ameen.find(async function (reactions) {
+            await reactions.remove();
+        })
+        // await post.reactions.ameen.remove()
+    }
+
+    else {
+        // (2) If the user is the Owner..
+        await mainUser.posts.id(postId).reactions.ameen.remove();
+        await post.reactions.ameen.remove()
+    }
+    await mainUser.save();
+    await post.save();
+    await _user.save();
+}
+
+removeAmeenButton("5ea8dca266406848bccad013", "5ea8f1912c64f73b50a424a9")
+
+/*
+* End of Remove Reaction  [ Ameen , recommend , forbidden ]
+* */
