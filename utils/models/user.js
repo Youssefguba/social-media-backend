@@ -35,9 +35,16 @@ const userSchema = new mongoose.Schema({
     },  // Date of User joined on it
 });
 
+// generating a hash
+// passwords are not saved to the database as is. Instead, they are hashed first, then saved.
+// hashes are always the same for the same password given the same "salt".
+userSchema.statics.generateHash = function(password) {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+};
+
 // comparing if the password entered is correct
 userSchema.methods.validPassword = function(password){
-    return bcrypt.compare(password ,this.password);
+    return bcrypt.compareSync(password ,this.password);
 }
 
 /* Validation User within response to the server */

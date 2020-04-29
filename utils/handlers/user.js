@@ -39,6 +39,7 @@ function createNewUser(obj, callback) {
                first_name: obj.first_name,
                last_name: obj.last_name,
                email: obj.email,
+               // password: User.generateHash(obj.password),
                birthday: obj.birthday,
                profile_pic: "PUT Here default photo",
                followers: [],
