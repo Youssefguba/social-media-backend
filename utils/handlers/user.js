@@ -56,10 +56,11 @@ function createNewUser(obj, callback) {
         }
     });
 }
-// createNewUser( {username: "Ahmed",
-//         first_name: "Ahmed ",
-//         last_name: "Mohamed",
-//         email:"Ahmed2@gmail.com",
+
+// createNewUser( {username: "Mostafaaaaa",
+//         first_name: "Mostafaaaaa ",
+//         last_name: "Mostafaaaaa",
+//         email:"mostafa1@gmail.com",
 //         password: "adfafadsfasdfasdf"},
 //     ()=> {
 //         console.log("Hello There is Error Here")
@@ -112,7 +113,7 @@ async function addPost(userId, obj) {
         }
     });
 }
-// addPost("5ea4f40392b19a16a4a75c03", new Post({
+// addPost("5ea673ab0a30833f501da496", new Post({
 //     body: "Hello World One!"
 // }))
 
@@ -286,7 +287,7 @@ async function followUser(userId, followedPersonId) {
     followedPerson.save();
 }
 
-followUser("5ea673ab0a30833f501da496","5ea673a3e674c34564009531")
+// followUser("5ea673ab0a30833f501da496","5ea673a3e674c34564009531")
 
 /**
  *
@@ -313,10 +314,14 @@ async function unfollowUser(userId, followedPersonId ) {
     followedPerson.save();
 }
 
+/*
+* Add post to Saved Posts
+* */
 async function savePost(userId, postId) {
     let user = await User.findById(userId);
     let post = await Post.findById(postId);
 
+    // Check if post is already in Saved Posts to add it..
     if (!user.saved_posts.id(postId)){
         await user.saved_posts.push(post);
     } else {
@@ -326,4 +331,19 @@ async function savePost(userId, postId) {
     await user.save()
 }
 
-savePost("5ea673a3e674c34564009531","5ea656697a6dae47cc3007c2")
+async function ameen(userId, postId) {
+    let user_info  = await User.findById(userId).select("id username profile_pic");
+    let mainUser = await User.findById(userId);
+    let post  = await Post.findById(postId);
+    let _user = await User.findById(post.authorId);
+
+    // TODO (1) => Check if the user already liked this post or not.
+    // TODO (2) => Check if the user is the owner of Post or not!
+
+    await mainUser.posts.id(postId).reactions.ameen.push(user_info);
+    console.log(await post.reactions.ameen.push(user_info))
+    await mainUser.save();
+    await post.save();
+
+}
+ameen("5ea673ab0a30833f501da496","5ea8f1912c64f73b50a424a9")

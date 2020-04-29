@@ -30,11 +30,11 @@ const postSchema = new mongoose.Schema({
         isRecommended: Boolean,
         isForbidden: Boolean
     }],
-    reactions: [{ // Number of Reactions on post.
-        ameen: Number,
-        recommended: Number,
-        forbidden: Number
-    }],
+    reactions: { // Number of Reactions on post.
+             ameen: {type: Array},
+             recommended: {type: Array},
+             forbidden: {type: Array}
+      },
 });
 
 
