@@ -67,9 +67,8 @@ module.exports = function(passport) {
                 email: email,
                 // hash/encrypt password before storing it in the database
                 password: User.generateHash(password),
-                nickname: req.body.nickname,
-                age: req.body.age,
-                role: req.body.role
+                username: req.body.username,
+
             }).save(function(err, savedUser) {
                 if (err) {
                     return done(err, false)
@@ -92,7 +91,7 @@ module.exports = function(passport) {
 
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
-        User.findById(id, function(err, user) {
+        User.findById(id).then(function(err, user) {
             done(err, user);
         });
     });

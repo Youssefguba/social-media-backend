@@ -7,7 +7,6 @@ const MongoStore = require('connect-mongo')(session);
 const passport = require('passport')
 const path = require('path')
 
-
 require('dotenv/config');
 
 // Routes
@@ -31,20 +30,6 @@ mongoose.connection.once('disconnected', function() {
     console.log("Database disconnected")
 })
 
-// view engine setup
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-app.use(express.json());
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
-
-
-app.use('/auth', auth);
-app.use('/users',  userRouter);
-app.use('/posts', postRouter);
-app.use("/", indexRouter);
-
 
 app.use(session({
     name: 'sessionId',
@@ -57,7 +42,6 @@ app.use(session({
         mongooseConnection: mongoose.connection,
         ttl: 1 * 24 * 60 * 60 // = 14 days. ttl means "time to live" (expiration in seconds)
     }),
-
     // cookies settings
     cookie: {
         secure: false,
@@ -65,19 +49,29 @@ app.use(session({
         expires: new Date(Date.now() + 60 * 60 * 1000) // 1 hour;
     }
 }))
+
 // Passport Config
 require('./config/passport')(passport); // pass passport for configuration
 // Passport init (must be after establishing the session above)
-app.use(passport.initialize);
-app.use(passport.session); // persistent login sessions
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+
+app.use(express.json());
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use('/auth', auth);
+app.use('/users',  userRouter);
+app.use('/posts', postRouter);
+app.use("/", indexRouter);
 
 // Pass 'req.user' as 'user' to ejs templates
 // Just a custom middleware
-app.use(function(req, res, next) {
-    res.locals.user = req.user || null;
-    // res.locals is an object available to ejs templates. for example: <%= user %>
-    next();
-})
+// app.use(function(req, res, next) {
+//     res.locals.user = req.user || null;
+//     // res.locals is an object available to ejs templates. for example: <%= user %>
+//     next();
+// })
 
 
 app.listen(4000, ()=> {console.log("Hello from our Listener")});
