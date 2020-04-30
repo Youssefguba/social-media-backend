@@ -404,7 +404,7 @@ async function forbiddenButton(userId, postId) {
 /*
 * Begin of Remove Reaction  [ Ameen , recommend , forbidden ]
 * */
-async function removeAmeenButton(userId, postId) {
+async function removeAmeenReaction(userId, postId) {
     let mainUser   = await User.findById(userId);
     let post  = await Post.findById(postId);
     let _user = await User.findById(post.authorId);
@@ -445,6 +445,91 @@ async function removeAmeenButton(userId, postId) {
     await post.save();
     await _user.save();
 }
+
+async function removeRecommendReaction(userId, postId) {
+    let mainUser   = await User.findById(userId);
+    let post  = await Post.findById(postId);
+    let _user = await User.findById(post.authorId);
+    // TODO (1) => Check if the user liked this post or not!
+    /*
+    * We made this to make changes happen in database when user click on "Ameen" button..
+    * */
+    // (*) Check if the user is the owner of post or not..
+    // (1) If the user is /not/ the owner..
+
+    //TODO remove the reaction of the user that liked the post ..
+
+    if (!(mainUser.posts.id(postId))) {
+        // .. then find the place of post in User collection to push post to the list..
+        let userPosts = await _user.posts.id(postId).reactions.recommended.find(async function (reactions) {
+            return reactions._id
+        })
+        let posts = await post.reactions.recommended.find(async function (reactions) {
+            return reactions._id
+        })
+        userPosts.remove();
+        posts.remove();
+
+    } else {
+        // (2) If the user is the Owner..
+        let userPosts = await mainUser.posts.id(postId).reactions.recommended.find(async function (reactions) {
+            return reactions._id
+        })
+        let posts = await post.reactions.recommended.find(async function (reactions) {
+            return reactions._id
+        })
+        userPosts.remove();
+        posts.remove();
+
+    }
+
+    await mainUser.save();
+    await post.save();
+    await _user.save();
+}
+
+async function removeForbiddenReaction(userId, postId) {
+    let mainUser   = await User.findById(userId);
+    let post  = await Post.findById(postId);
+    let _user = await User.findById(post.authorId);
+    // TODO (1) => Check if the user liked this post or not!
+    /*
+    * We made this to make changes happen in database when user click on "Ameen" button..
+    * */
+    // (*) Check if the user is the owner of post or not..
+    // (1) If the user is /not/ the owner..
+
+    //TODO remove the reaction of the user that liked the post ..
+
+    if (!(mainUser.posts.id(postId))) {
+        // .. then find the place of post in User collection to push post to the list..
+        let userPosts = await _user.posts.id(postId).reactions.forbidden.find(async function (reactions) {
+            return reactions._id
+        })
+        let posts = await post.reactions.forbidden.find(async function (reactions) {
+            return reactions._id
+        })
+        userPosts.remove();
+        posts.remove();
+
+    } else {
+        // (2) If the user is the Owner..
+        let userPosts = await mainUser.posts.id(postId).reactions.forbidden.find(async function (reactions) {
+            return reactions._id
+        })
+        let posts = await post.reactions.forbidden.find(async function (reactions) {
+            return reactions._id
+        })
+        userPosts.remove();
+        posts.remove();
+
+    }
+
+    await mainUser.save();
+    await post.save();
+    await _user.save();
+}
+
 
 /*
 * End of Remove Reaction  [ Ameen , recommend , forbidden ]
