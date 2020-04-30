@@ -58,10 +58,10 @@ function createNewUser(obj, callback) {
     });
 }
 
-// createNewUser( {username: "Mostafaaaaa",
-//         first_name: "Mostafaaaaa ",
-//         last_name: "Mostafaaaaa",
-//         email:"mostafa1@gmail.com",
+// createNewUser( {username: "Hassaaan",
+//         first_name: "Hassaaan ",
+//         last_name: "Hassaaan",
+//         email:"Hassaaan@gmail.com",
 //         password: "adfafadsfasdfasdf"},
 //     ()=> {
 //         console.log("Hello There is Error Here")
@@ -93,7 +93,7 @@ async function addPost(userId, obj) {
         }
     });
 }
-// addPost("5ea673ab0a30833f501da496", new Post({
+// addPost("5eaa5047ea428f43dce95800", new Post({
 //     body: "Hello World One!"
 // }))
 
@@ -289,7 +289,6 @@ async function unfollowUser(userId, followedPersonId ) {
         return follower.member_id;
     })
     followerMemberId ? followerMemberId.remove() : console.log("You already unfollowed him.")
-
     user.save();
     followedPerson.save();
 }
@@ -369,6 +368,7 @@ async function recommendButton(userId, postId) {
     await post.save();
     await _user.save();
 }
+// recommendButton("5eaa5047ea428f43dce95800","5eaa506605cb192afcb356ad")
 
  /* Forbidden Button Reaction */
 async function forbiddenButton(userId, postId) {
@@ -404,38 +404,48 @@ async function forbiddenButton(userId, postId) {
 /*
 * Begin of Remove Reaction  [ Ameen , recommend , forbidden ]
 * */
-// async function removeAmeenButton(userId, postId) {
-//     let user_info  = await User.findById(userId).select("id username profile_pic");
-//     let mainUser = await User.findById(userId);
-//     let post  = await Post.findById(postId);
-//     let _user = await User.findById(post.authorId);
-//     // TODO (1) => Check if the user liked this post or not!
-//
-//     /*
-//     * We made this to make changes happen in database when user click on "Ameen" button..
-//     * */
-//     // (*) Check if the user is the owner of post or not..
-//     // (1) If the user is /not/ the owner..
-//
-//     //TODO remove the reaction of the user that liked the post ..
-//     if (!(mainUser.posts.id(postId))) {
-//         //.. then find the place of post in User collection to push post to the list..
-//         await _user.posts.id(postId).reactions.ameen.find(async function (reactions) {
-//             await reactions.remove();
-//         })
-//         // await post.reactions.ameen.remove()
-//     }
-//
-//     else {
-//         // (2) If the user is the Owner..
-//         await mainUser.posts.id(postId).reactions.ameen.remove();
-//         await post.reactions.ameen.remove()
-//     }
-//     await mainUser.save();
-//     await post.save();
-//     await _user.save();
-// }
-//
+async function removeAmeenButton(userId, postId) {
+    let mainUser   = await User.findById(userId);
+    let post  = await Post.findById(postId);
+    let _user = await User.findById(post.authorId);
+    // TODO (1) => Check if the user liked this post or not!
+    /*
+    * We made this to make changes happen in database when user click on "Ameen" button..
+    * */
+    // (*) Check if the user is the owner of post or not..
+    // (1) If the user is /not/ the owner..
+
+    //TODO remove the reaction of the user that liked the post ..
+
+    if (!(mainUser.posts.id(postId))) {
+        // .. then find the place of post in User collection to push post to the list..
+       let userPosts = await _user.posts.id(postId).reactions.ameen.find(async function (reactions) {
+            return reactions._id
+        })
+       let posts = await post.reactions.ameen.find(async function (reactions) {
+            return reactions._id
+        })
+        userPosts.remove();
+        posts.remove();
+
+    } else {
+        // (2) If the user is the Owner..
+        let userPosts = await mainUser.posts.id(postId).reactions.ameen.find(async function (reactions) {
+            return reactions._id
+        })
+        let posts = await post.reactions.ameen.find(async function (reactions) {
+            return reactions._id
+        })
+        userPosts.remove();
+        posts.remove();
+
+    }
+
+    await mainUser.save();
+    await post.save();
+    await _user.save();
+}
+
 /*
 * End of Remove Reaction  [ Ameen , recommend , forbidden ]
 * */
