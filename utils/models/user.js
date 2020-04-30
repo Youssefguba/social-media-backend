@@ -3,15 +3,6 @@ const { postSchema } = require('../models/post');
 const Joi = require('@hapi/joi');
 const bcrypt = require('bcrypt');
 
-
-const userProfile = mongoose.Schema({
-
-    user_ref: {
-        ref: 'User',
-        type: mongoose.Schema.ObjectId,
-    },
-})
-
 const userSchema = new mongoose.Schema({
     userId: mongoose.Schema.Types.ObjectId,
     username:   String,    //username
