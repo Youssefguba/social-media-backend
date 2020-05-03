@@ -1,5 +1,5 @@
 const express = require('express');
-const home = express.Router({mergeParams:true});
+const home = express.Router();
 const {Post, validatePost, Comment} = require('../utils/models/post');
 const {User} = require('../utils/models/user');
 
@@ -10,8 +10,8 @@ const {User} = require('../utils/models/user');
 *
 * */
 home.get('/', async (req, res) => {
-    let posts = await Post.find().sort({createdAt: -1});
-    res.send(posts)
+    let posts = await Post.find();
+    res.json(posts)
 })
 
 /*
@@ -19,7 +19,7 @@ home.get('/', async (req, res) => {
 * */
 home.get('/:postId', async (req, res) => {
     let posts = await Post.findById(req.params.postId);
-    res.send(posts)
+    res.json(posts)
 })
 
 /*
