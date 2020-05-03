@@ -15,6 +15,6 @@ module.exports = {
     author:"Guba Techack",
     version:"1.0.0",
     db:{
-        connectionUri:"mongodb+srv://ameenuser:1234@ameen-zwliw.mongodb.net/test"
+        connectionUri:"mongodb+srv://ameenuser:1234@ameen-zwliw.mongodb.net/ameen"
     }
 };
