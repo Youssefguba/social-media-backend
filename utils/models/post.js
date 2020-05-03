@@ -31,9 +31,9 @@ const postSchema = new mongoose.Schema({
         isForbidden: Boolean
     }],
     reactions: { // Number of Reactions on post.
-             ameen: [{_id: mongoose.Schema.Types.ObjectId, username: String, profile_pic: String}],
-             recommended: [{_id: mongoose.Schema.Types.ObjectId, username: String, profile_pic: String}],
-             forbidden: [{_id: mongoose.Schema.Types.ObjectId, username: String, profile_pic: String}]
+             ameen: [{_id: mongoose.Schema.ObjectId, username: String, profile_pic: String}],
+             recommended: [{_id: mongoose.Schema.ObjectId, username: String, profile_pic: String}],
+             forbidden: [{_id: mongoose.Schema.ObjectId, username: String, profile_pic: String}]
       },
 });
 

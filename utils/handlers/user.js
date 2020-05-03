@@ -93,9 +93,9 @@ async function addPost(userId, obj) {
         }
     });
 }
-// addPost("5eaa5047ea428f43dce95800", new Post({
-//     body: "Hello World One!"
-// }))
+addPost("5ea673a3e674c34564009531", new Post({
+    body: "Hello World Two!"
+}))
 
 /**
  * Delete Post of User

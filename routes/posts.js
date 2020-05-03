@@ -5,10 +5,10 @@ const {User, postsRouter}  = require('../utils/models/user')
 
 
 /*  GET Posts Listing */
-post.get('/', async (req, res) => {
-    const post = await Post.find();
-    res.send(post);
-});
+// post.get('/', async (req, res) => {
+//     const post = await Post.find();
+//     res.send(post);
+// });
 
 
 // post.put('/:postId', async (req, res) => {

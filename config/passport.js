@@ -13,7 +13,6 @@ module.exports = function(passport) {
         passwordField : 'password', // 'password' refers to the req.body.password submitted with login.ejs form where the <input name="password" ...>
         passReqToCallback : true // allows us to pass in the req from our route (lets us check if a user is logged in or not)
     }, function(req, email, password, done) {
-        
         // we lookup a user with a matching 'email'
         User.findOne({email: email}).then(function(user) {
             // Note: the callback function 'done' is used here like 'return' to resume progam execution.
@@ -22,18 +21,18 @@ module.exports = function(passport) {
             // if no user found
             if (!user) {
                 // this means fail the login
-                return done(null, false);
+                return done(null, console.log("Fail to login"));
             }
         
             // check password validity
             if (!user.validPassword(password)) {
                 // this means fail login
-                return done(null, false);
+                return done(null, console.log("Not valid password"));
             }
 
             // otherwise, pass user object with no errors
             return done(null, user)    
-        }).catch(function(err) {done(err, false)});
+        }).catch(function(err) {done(err, "Error Here")});
     }));
 
     // =========================================================================
@@ -54,16 +53,14 @@ module.exports = function(passport) {
 
         // we check if no other user has already taken this email
         User.findOne({email : email}).then(function(user) {
-
             // check if a user found with this email
             if (user) {
                 // fail the signup
                 return done(null, false);
             }
-
             // otherwise store user info in the Database
             new User({
-                email: email,
+                email: req.body.email,
                 // hash/encrypt password before storing it in the database
                 password: User.generateHash(password),
                 username: req.body.username,

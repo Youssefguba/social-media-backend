@@ -1,14 +1,15 @@
 const express = require('express');
 const app = express();
+const http = require('http').createServer(app);
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const passport = require('passport')
-const path = require('path')
+const io = require('socket.io')(http);
 
 require('dotenv/config');
-
+require('./startup/prod')(app);
 // Routes
 const userRouter = require('./routes/users');
 const postRouter = require('./routes/posts');
@@ -40,7 +41,7 @@ app.use(session({
     // Where to store session data
     store: new MongoStore({
         mongooseConnection: mongoose.connection,
-        ttl: 1 * 24 * 60 * 60 // = 14 days. ttl means "time to live" (expiration in seconds)
+        ttl:  6 // = 1 day. ttl means "time to live" (expiration in seconds)
     }),
     // cookies settings
     cookie: {
@@ -64,14 +65,5 @@ app.use('/auth', auth);
 app.use('/users',  userRouter);
 app.use('/posts', postRouter);
 app.use("/", indexRouter);
-
-// Pass 'req.user' as 'user' to ejs templates
-// Just a custom middleware
-// app.use(function(req, res, next) {
-//     res.locals.user = req.user || null;
-//     // res.locals is an object available to ejs templates. for example: <%= user %>
-//     next();
-// })
-
 
 app.listen(4000, ()=> {console.log("Hello from our Listener")});
