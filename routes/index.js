@@ -9,6 +9,10 @@ const {User} = require('../utils/models/user');
 * TODO => (1) you should handle and random it ..
 *
 * */
+// To handle Errors
+home.get('/favicon.ico', (req, res) => res.status(204));
+
+
 home.get('/', async (req, res) => {
     let posts = await Post.find();
     res.send(posts)
@@ -21,6 +25,7 @@ home.get('/:postId', async (req, res) => {
     let posts = await Post.findById(req.params.postId);
     res.send(posts)
 })
+
 
 /*
 * Get Comment of post
