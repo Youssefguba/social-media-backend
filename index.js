@@ -81,5 +81,6 @@ function ignoreFavicon(req, res, next) {
 }
 app.use(ignoreFavicon);
 
+const port = process.env.PORT || 8000;
 
-app.listen(4000, ()=> {console.log("Hello from our Listener")});
+app.listen(port, ()=> {console.log("Hello from our Listener")});
