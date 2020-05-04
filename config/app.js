@@ -3,7 +3,6 @@
 * Host and DB
 * */
 
-let dbHost = process.env.dbHost || ;
 module.exports = {
     name:"Ameen",
     title:"Ameen",
