@@ -16,7 +16,7 @@ const postRouter = require('./routes/posts');
 const indexRouter = require('./routes/index');
 const auth = require('./routes/auth');
 
-mongoose.connect(require('./config/app').db.connectionUri, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(require('./config/app').db.connectionUri, {useNewUrlParser: true, useUnifiedTopology: false})
     .then(() => console.log('Connected to MongoDB...'))
     .catch(err => console.error('Could not connect to MongoDB...', err));
 
