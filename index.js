@@ -67,7 +67,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use('/auth', auth);
 app.use('/users',  userRouter);
 app.use('/posts', postRouter);
-app.use("/", indexRouter);
+app.use("/api/", indexRouter);
 
 /*
 * Handle Favicon Error..
