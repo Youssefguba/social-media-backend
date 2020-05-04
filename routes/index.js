@@ -14,7 +14,7 @@ home.get('/favicon.ico', (req, res) => res.status(204));
 
 
 home.get('/', async (req, res) => {
-    let posts = await Post.find();
+    let posts = await Post.find().sort({createdAt: -1});
     res.send(posts)
 })
 
