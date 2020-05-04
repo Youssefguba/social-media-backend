@@ -3,6 +3,7 @@
 * Host and DB
 * */
 
+let dbHost = process.env.dbHozst || "mongodb+srv://ameenuser:1234@ameen-zwliw.mongodb.net/test?retryWrites=true&w=majority";
 module.exports = {
     name:"Ameen",
     title:"Ameen",
@@ -13,6 +14,6 @@ module.exports = {
     author:"GubaTechack",
     version:"1.0.0",
     db:{
-        connectionUri: "mongodb+srv://ameenuser:1234@ameen-zwliw.mongodb.net/test?retryWrites=true&w=majority"
+        connectionUri: `${dbHost}`
     }
 };
