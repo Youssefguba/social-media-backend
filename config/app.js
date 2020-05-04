@@ -14,6 +14,6 @@ module.exports = {
     author:"GubaTechack",
     version:"1.0.0",
     db:{
-        connectionUri:"mongodb+srv://ameenuser:1234@ameen-zwliw.mongodb.net/test?retryWrites=true&w=majority"
+        connectionUri:"mongodb+srv://ameenuser:1234@ameen-zwliw.mongodb.net/test"
     }
 };

@@ -19,7 +19,7 @@ const auth = require('./routes/auth');
 mongoose.connect(require('./config/app').db.connectionUri, {useCreateIndex: true,
     useNewUrlParser: true,
     useFindAndModify: false,
-    useUnifiedTopology: false})
+    useUnifiedTopology: true})
     .then(() => console.log('Connected to MongoDB...'))
     .catch(err => console.error('Could not connect to MongoDB...', err));
 
