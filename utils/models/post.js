@@ -6,6 +6,7 @@ const commentSchema = new mongoose.Schema({
     commentId: mongoose.Schema.Types.ObjectId,
     comment_body: String,
     authorName: String,
+    authorPhoto: String,
     createdAt: {type: Date, default: Date.now},
     authorId: { ref:'User', type: mongoose.Schema.Types.ObjectId },
     postId  : { ref:'Post', type: mongoose.Schema.Types.ObjectId }
@@ -17,6 +18,7 @@ const postSchema = new mongoose.Schema({
     body: String, // => "Any Example"
     authorId: mongoose.Types.ObjectId,
     authorName: String,
+    authorPhoto: String,
     comments: [commentSchema],
     author: {
         ref: 'User',

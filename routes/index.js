@@ -48,8 +48,8 @@ home.post(['/','/users/:userId'], async (req, res) => {
             body: req.body.body,
             createdAt: Date.now(),
             authorId: req.params.userId,
-            authorName: user.username
-            //TODO => Add Username of user in "authorName"..
+            authorName: user.username,
+            authorPhoto: user.profile_pic
         });
         // Push post to (User.posts) List => {'/users/:userId'} route
         user.posts.push(newPost);

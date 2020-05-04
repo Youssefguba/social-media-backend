@@ -79,8 +79,10 @@ async function addPost(userId, obj) {
             // Push Post to User Posts List
             let newPost = new Post({
                 body: obj.body,
+                createdAt: Date.now(),
                 authorId: userId,
                 authorName: user.username,
+                authorPhoto: user.profile_pic
             });
             user.posts.push(newPost)
             user.save();
@@ -93,9 +95,9 @@ async function addPost(userId, obj) {
         }
     });
 }
-addPost("5ea673a3e674c34564009531", new Post({
-    body: "Hello World Two!"
-}))
+// addPost("5ea673a3e674c34564009531", new Post({
+//     body: "Hello World Two!"
+// }))
 
 /**
  * Delete Post of User
