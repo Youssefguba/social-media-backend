@@ -69,4 +69,17 @@ app.use('/users',  userRouter);
 app.use('/posts', postRouter);
 app.use("/", indexRouter);
 
+/*
+* Handle Favicon Error..
+* */
+function ignoreFavicon(req, res, next) {
+    if (req.originalUrl === '/favicon.ico') {
+        res.status(204).json({nope: true});
+    } else {
+        next();
+    }
+}
+app.use(ignoreFavicon);
+
+
 app.listen(4000, ()=> {console.log("Hello from our Listener")});

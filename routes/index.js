@@ -163,4 +163,12 @@ home.delete(['/:postId/:commentId', '/users/:userId/:postId/:commentId'], async 
     res.send(comment);
 })
 
+function ignoreFavicon(req, res, next) {
+    if (req.originalUrl === '/favicon.ico') {
+        res.status(204).json({nope: true});
+    } else {
+        next();
+    }
+}
+
 module.exports = home;
