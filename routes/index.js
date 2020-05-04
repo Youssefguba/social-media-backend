@@ -11,7 +11,7 @@ const {User} = require('../utils/models/user');
 * */
 home.get('/', async (req, res) => {
     let posts = await Post.find();
-    res.json(posts)
+    res.send(posts)
 })
 
 /*
@@ -19,7 +19,7 @@ home.get('/', async (req, res) => {
 * */
 home.get('/:postId', async (req, res) => {
     let posts = await Post.findById(req.params.postId);
-    res.json(posts)
+    res.send(posts)
 })
 
 /*
