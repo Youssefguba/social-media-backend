@@ -9,33 +9,13 @@ const {User} = require('../utils/models/user');
 * TODO => (1) you should handle and random it ..
 *
 * */
-// To handle Errors
-home.get('/favicon.ico', (req, res) => res.status(204));
-
-
 home.get('/', async (req, res) => {
     let posts = await Post.find().sort({createdAt: -1});
     res.send(posts)
 })
 
-/*
-* Get Post
-* */
-home.get('/:postId', async (req, res) => {
-    let posts = await Post.findById(req.params.postId);
-    res.send(posts)
-})
+home.get('/favicon.ico', (req, res) => res.status(204).send("No Content"));
 
-
-/*
-* Get Comment of post
-* */
-home.get('/:postId/:commentId', async (req, res) => {
-     let comment = await Post.findById(req.params.postId).then(post =>
-         post.comments.findById(req.params.commentId)
-     );
-    res.send(comment)
-})
 
 /*
 * Push Post to Home page and User Page in the same time..
@@ -49,7 +29,7 @@ home.post(['/','/users/:userId'], async (req, res) => {
             createdAt: Date.now(),
             authorId: req.params.userId,
             authorName: user.username,
-            authorPhoto: user.profile_pic
+            authorPhoto: user.profilePic
         });
         // Push post to (User.posts) List => {'/users/:userId'} route
         user.posts.push(newPost);
@@ -59,7 +39,8 @@ home.post(['/','/users/:userId'], async (req, res) => {
         newPost = await newPost.save();
         res.send(newPost);
     });
-})
+});
+
 
 // Get Post related to the user..
 home.get('/users/:userId/:postId', async (req, res) => {
@@ -75,6 +56,7 @@ home.get('/users/:userId/:postId', async (req, res) => {
         }
     });
 })
+
 
 /*
 * Update Post
@@ -95,7 +77,6 @@ home.put(['/:postId','/users/:userId/:postId'], async (req, res) => {
     res.send(userPost);
 });
 
-
 /*
 * Delete Post
 * */
@@ -108,18 +89,19 @@ home.delete(['/:postId','/users/:userId/:postId'], async (req, res) => {
     res.send(post);
 });
 
+
 /*
 * Add comment
 * */
 home.post(['/:postId', '/users/:userId/:postId'], async (req, res) => {
-      await Post.findById(req.params.postId).exec(async (err, post) => {
-          // Create a new comment..
-          let newComment = new Comment({
-              comment_body: req.body.comment_body,
-              authorId: req.params.userId || post.authorId,
-              postId: req.params.postId,
-              authorName: post.authorName
-          });
+    await Post.findById(req.params.postId).exec(async (err, post) => {
+        // Create a new comment..
+        let newComment = new Comment({
+            comment_body: req.body.comment_body,
+            authorId: req.params.userId || post.authorId,
+            postId: req.params.postId,
+            authorName: post.authorName
+        });
 
         if (!post) return res.status(404).send("Post is not Found!");
         //find the post of user to push comment for it for posts collection..
@@ -130,10 +112,10 @@ home.post(['/:postId', '/users/:userId/:postId'], async (req, res) => {
         await User.findById(req.params.userId || post.authorId).exec(async (err, user) => {
             await user.posts.id(req.params.postId).comments.push(newComment)
             user.save()
-         })
-          // Save comment for Comment Collection..
-          newComment.save()
-          res.send(newComment)
+        })
+        // Save comment for Comment Collection..
+        newComment.save()
+        res.send(newComment)
     })
 })
 
@@ -164,12 +146,26 @@ home.delete(['/:postId/:commentId', '/users/:userId/:postId/:commentId'], async 
     res.send(comment);
 })
 
-function ignoreFavicon(req, res, next) {
-    if (req.originalUrl === '/favicon.ico') {
-        res.status(204).json({nope: true});
-    } else {
-        next();
-    }
-}
+
+/*
+* Get Post
+* */
+home.get('/:postId', async (req, res) => {
+    let posts = await Post.findById(req.params.postId);
+    res.send(posts)
+});
+
+
+/*
+* Get Comment of post
+* */
+home.get('/:postId/:commentId', async (req, res) => {
+     let comment = await Post.findById(req.params.postId).then(post =>
+         post.comments.findById(req.params.commentId)
+     );
+    res.send(comment)
+});
+
+
 
 module.exports = home;

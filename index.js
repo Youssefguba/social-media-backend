@@ -6,10 +6,17 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const passport = require('passport')
-const io = require('socket.io')(http);
+const morgan = require('morgan');
+
 
 require('dotenv/config');
 require('./startup/prod')(app);
+// Passport Config
+require('./config/passport')(passport); // pass passport for configuration
+// Passport init (must be after establishing the session above)
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+
 // Routes
 const userRouter = require('./routes/users');
 const postRouter = require('./routes/posts');
@@ -54,20 +61,22 @@ app.use(session({
     }
 }))
 
-// Passport Config
-require('./config/passport')(passport); // pass passport for configuration
-// Passport init (must be after establishing the session above)
-app.use(passport.initialize());
-app.use(passport.session()); // persistent login sessions
+
+app.use(function (req, res, next) {
+    res.locals.currentUser = req.user
+    next()
+})
 
 app.use(express.json());
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(morgan('dev'));
 
 app.use('/auth', auth);
 app.use('/users',  userRouter);
 app.use('/posts', postRouter);
 app.use("/", indexRouter);
+app.use(express.static('/public/images'));
 
 /*
 * Handle Favicon Error..

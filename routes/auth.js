@@ -2,10 +2,14 @@ const router = require('express').Router()
 const passport = require('passport');
 
 
-// LOGOUT ==============================
-router.get('/logout', function(req, res, next) {
-	req.logout();
-	res.redirect('/');
+
+//  Signup ====================================================================
+router.post('/signup', passport.authenticate('local-signup', {
+	failureRedirect : '/auth/signup',
+	failureFlash : false // allow flash messages
+}), function(req, res, next)  {
+	// res.redirect('/')
+	res.send("Registration Success!")
 });
 
 // Login ====================================================================
@@ -18,14 +22,13 @@ router.post('/login', passport.authenticate('local-login', {
 
 });
 
-//  Signup ====================================================================
-router.post('/signup', passport.authenticate('local-signup', {
-	failureRedirect : '/auth/signup',
-	failureFlash : false // allow flash messages
-}), function(req, res, next)  {
-	// res.redirect('/')
-	res.send("Registration Success!")
+
+// LOGOUT ==============================
+router.get('/logout', function(req, res, next) {
+	req.logout();
+	// res.redirect('/');
 });
+
 
 
 module.exports = router;

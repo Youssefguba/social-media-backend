@@ -16,14 +16,21 @@ const userSchema = new mongoose.Schema({
     isActive: Boolean,   // Status of User Active or !Active
     isAdministrator: {type: Boolean, default: false},   // user isAdministrator or !
     chat_rooms: Array,
-    followers: [{member_id: mongoose.Schema.Types.ObjectId, follower_name: String, profile_pic: String}], //['Ahmed Mohamed', 'Youssef mohamed']
-    following: [{member_id: mongoose.Schema.Types.ObjectId, followed_name: String, profile_pic: String}], //['Ahmed Mohamed', 'Youssef mohamed']
-    profile_pic: String,    // /public/profile_pic/username/user.png
-    notification: Array,   // List of Notification of user
+    followers: [{member_id: mongoose.Schema.Types.ObjectId, follower_name: String, profilePic: String}], //['Ahmed Mohamed', 'Youssef mohamed']
+    following: [{member_id: mongoose.Schema.Types.ObjectId, followed_name: String, profilePic: String}], //['Ahmed Mohamed', 'Youssef mohamed']
+    profilePic: {imageId: mongoose.Schema.ObjectId, type:Object},    // /public/profilePic/username/user.png
+    notification: Array,  // List of Notification of user
     joined_date: {
         type: Date,
         default: Date.now
     },  // Date of User joined on it
+});
+
+const imageSchema = new mongoose.Schema({
+    image: {type: Buffer},
+    contentType: String,
+    path: String,
+
 });
 
 // generating a hash
@@ -52,6 +59,7 @@ function validateUser(post){
 
 module.exports = {
     User: mongoose.model('User', userSchema),
+    Images: mongoose.model('Images', imageSchema),
     userSchema: userSchema,
     validateUser: validateUser
 }

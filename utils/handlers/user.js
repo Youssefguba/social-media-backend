@@ -41,7 +41,7 @@ function createNewUser(obj, callback) {
                email: obj.email,
                // password: User.generateHash(obj.password),
                birthday: obj.birthday,
-               profile_pic: "PUT Here default photo",
+               profilePic: "PUT Here default photo",
                followers: [],
                following: [],
                notification: [],
@@ -82,7 +82,7 @@ async function addPost(userId, obj) {
                 createdAt: Date.now(),
                 authorId: userId,
                 authorName: user.username,
-                authorPhoto: user.profile_pic
+                authorPhoto: user.profilePic
             });
             user.posts.push(newPost)
             user.save();
@@ -234,7 +234,7 @@ async function followUser(userId, followedPersonId) {
     let user_schema = {
         follower_name: user.username,
         member_id: userId,
-        profile_pic: user.profile_pic,
+        profilePic: user.profilePic,
     }
     // Check if User already in followers list or not.
     if (!followerMemberId) {
@@ -254,7 +254,7 @@ async function followUser(userId, followedPersonId) {
     let followedPerson_schema = {
         followed_name: followedPerson.username,
         member_id:     followedPersonId,
-        profile_pic:   followedPerson.profile_pic,
+        profilePic:    followedPerson.profilePic,
     }
     if (!followedMemberId){
         await user.following.push(followedPerson_schema)
@@ -318,7 +318,7 @@ async function savePost(userId, postId) {
 
 /* Ameen Reaction */
 async function ameenButton(userId, postId) {
-    let user_info  = await User.findById(userId).select("id username profile_pic");
+    let user_info  = await User.findById(userId).select("id username profilePic");
     let mainUser = await User.findById(userId);
     let post  = await Post.findById(postId);
     let _user = await User.findById(post.authorId);
@@ -345,7 +345,7 @@ async function ameenButton(userId, postId) {
 
 /* Recommend Button Reaction */
 async function recommendButton(userId, postId) {
-    let user_info  = await User.findById(userId).select("id username profile_pic");
+    let user_info  = await User.findById(userId).select("id username profilePic");
     let mainUser = await User.findById(userId);
     let post  = await Post.findById(postId);
     let _user = await User.findById(post.authorId);
@@ -374,7 +374,7 @@ async function recommendButton(userId, postId) {
 
  /* Forbidden Button Reaction */
 async function forbiddenButton(userId, postId) {
-    let user_info  = await User.findById(userId).select("id username profile_pic");
+    let user_info  = await User.findById(userId).select("id username profilePic");
     let mainUser = await User.findById(userId);
     let post  = await Post.findById(postId);
     let _user = await User.findById(post.authorId);

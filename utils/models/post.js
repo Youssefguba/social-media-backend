@@ -8,21 +8,20 @@ const commentSchema = new mongoose.Schema({
     authorName: String,
     authorPhoto: String,
     createdAt: {type: Date, default: Date.now},
-    authorId: { ref:'User', type: mongoose.Schema.Types.ObjectId },
-    postId  : { ref:'Post', type: mongoose.Schema.Types.ObjectId }
+    authorId: { ref:'User', type: mongoose.Schema.Types.ObjectId},
 });
 
 
 const postSchema = new mongoose.Schema({
-    postId: mongoose.Schema.ObjectId,
+    postId: mongoose.Schema.Types.ObjectId,
     body: String, // => "Any Example"
-    authorId: mongoose.Types.ObjectId,
+    authorId: mongoose.Schema.Types.ObjectId,
     authorName: String,
     authorPhoto: String,
     comments: [commentSchema],
     author: {
         ref: 'User',
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
     },
     createdAt: {
         type: Date,
@@ -33,9 +32,9 @@ const postSchema = new mongoose.Schema({
         isForbidden: Boolean
     }],
     reactions: { // Number of Reactions on post.
-             ameen: [{_id: mongoose.Schema.ObjectId, username: String, profile_pic: String}],
-             recommended: [{_id: mongoose.Schema.ObjectId, username: String, profile_pic: String}],
-             forbidden: [{_id: mongoose.Schema.ObjectId, username: String, profile_pic: String}]
+        ameen:       [{ameenId: mongoose.Schema.Types.ObjectId,       username: String, profilePic: String}],
+        recommended: [{recommendedId: mongoose.Schema.Types.ObjectId, username: String, profilePic: String}],
+        forbidden:   [{forbiddenId: mongoose.Schema.Types.ObjectId,   username: String, profilePic: String}]
       },
 });
 
