@@ -1,6 +1,6 @@
 const express = require('express');
 const home = express.Router();
-const {Post, validatePost, Comment} = require('../utils/models/post');
+const {Post, validatePost, Comment, Reaction} = require('../utils/models/post');
 const {User} = require('../utils/models/user');
 
 /*
@@ -166,6 +166,58 @@ home.get('/:postId/:commentId', async (req, res) => {
     res.send(comment)
 });
 
+/*
+* React with Ameen
+* */
+home.post(['/:postId/reactions', '/users/:userId/:postId/reactions'], async (req, res) => {
+    let user_info  = await User.findById(req.params.userId).select("id username");
+    let mainUser = await User.findById(req.params.userId);
+    await Post.findById(req.params.postId).exec(async (err, post) => {
+        /*
+         * We made this to make changes happen in database when user click on "Ameen" button..
+         * */
+        // (*) Check if the user is the owner of post or not..
+        // (1) If the user is /not/ the owner..
+       if (!(mainUser.posts.id(req.params.postId))) {
+            await User.findById(post.authorId).exec(async (err, user) => {
+               await user.posts.id(req.params.postId).ameenReaction.push(user_info);
+               await post.ameenReaction.push(user_info)
+                await mainUser.save();
+                await user_info.save();
 
+
+            });
+           //.. then find the place of post in User collection to push post to the list..
+       } else {
+           // (2) If the user is the Owner..
+           await mainUser.posts.id(req.params.postId).ameenReaction.push(user_info);
+           await post.ameenReaction.push(user_info)
+           await user_info.save();
+           await mainUser.save();
+
+       }
+       await post.save();
+   });
+
+
+    //
+    // // TODO (1) => Check if the user liked this post or not!
+    // /*
+    // * We made this to make changes happen in database when user click on "Ameen" button..
+    // * */
+    // // (*) Check if the user is the owner of post or not..
+    // // (1) If the user is /not/ the owner..
+    // if (!(mainUser.posts.id(req.params.postId))) {
+    //     //.. then find the place of post in User collection to push post to the list..
+    //     await _user.posts.id(req.params.postId).ameenReaction.push(user_info);
+    //     await post.ameenReaction.push(user_info)
+    // } else {
+    //     // (2) If the user is the Owner..
+    //     await mainUser.posts.id(req.params.postId).ameenReaction.push(user_info);
+    //     await post.ameenReaction.push(user_info)
+    // }
+
+    // await _user.save();
+});
 
 module.exports = home;

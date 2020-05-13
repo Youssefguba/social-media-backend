@@ -2,6 +2,12 @@ const mongoose = require('mongoose');
 const Joi = require('@hapi/joi');
 const { User, userSchema } = require("../models/user");
 
+const reactionsSchema = new mongoose.Schema({
+    username: String,
+    profilePic: String,
+
+});
+
 const commentSchema = new mongoose.Schema({
     commentId: mongoose.Schema.Types.ObjectId,
     comment_body: String,
@@ -32,9 +38,9 @@ const postSchema = new mongoose.Schema({
         isForbidden: Boolean
     }],
      // Number of Reactions on post.
-    ameenReaction:       [{   username: String, profilePic: String }],
-    recommendReaction:   [{   username: String, profilePic: String }],
-    forbiddenReaction:   [{   username: String, profilePic: String }]
+    ameenReaction:     [reactionsSchema],
+    recommendReaction: [reactionsSchema],
+    forbiddenReaction: [reactionsSchema]
     
 });
 
@@ -50,6 +56,7 @@ function validatePost(post){
 module.exports = {
     Post: mongoose.model('Post', postSchema),
     Comment: mongoose.model('Comment', commentSchema),
+    Reaction: mongoose.model('Reaction', reactionsSchema),
     postSchema: postSchema,
     commentSchema: commentSchema,
     validatePost: validatePost
