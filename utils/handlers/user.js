@@ -176,6 +176,7 @@ async function addComment(authorId, postId, obj) {
         }
     }
 }
+// addComment("5eaf9a1491589d00176f541c", "5eba3c7d54b0f051544e428d", {comment_body: "Change Happened!!"})
 
 /**
  * delete comment on Post of User
@@ -318,7 +319,7 @@ async function savePost(userId, postId) {
 
 /* Ameen Reaction */
 async function ameenButton(userId, postId) {
-    let user_info  = await User.findById(userId).select("id username profilePic");
+    let user_info  = await User.findById(userId).select("id username");
     let mainUser = await User.findById(userId);
     let post  = await Post.findById(postId);
     let _user = await User.findById(post.authorId);
@@ -342,6 +343,8 @@ async function ameenButton(userId, postId) {
     await post.save();
     await _user.save();
 }
+
+ameenButton("5eaf9a1491589d00176f541c","5eb9e28fc41c4d0017244ae7")
 
 /* Recommend Button Reaction */
 async function recommendButton(userId, postId) {
@@ -370,7 +373,7 @@ async function recommendButton(userId, postId) {
     await post.save();
     await _user.save();
 }
-// recommendButton("5eaa5047ea428f43dce95800","5eaa506605cb192afcb356ad")
+recommendButton("5eaf9a1491589d00176f541c","5eb9e28fc41c4d0017244ae7")
 
  /* Forbidden Button Reaction */
 async function forbiddenButton(userId, postId) {

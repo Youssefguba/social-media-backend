@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
         cb(null, './public/images')
     },
     filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now())
+        cb(null,  file.fieldname+ '-' + Date.now())
     },
 });
 
@@ -102,7 +102,7 @@ user.post('/:userId/images', upload.single('image'), async (req, res) => {
             res.send(finalImg);
             user.save();
             Images.create(finalImg);
-            Images.save(finalImg);
+            Images.save();
 
         });
 });
@@ -113,8 +113,9 @@ user.get('/:userId/images/:id', upload.single('image'), async (req, res) => {
     console.log('filename:', filename)
     Images.findById({ '_id':filename }, (err, result) => {
         if (err) return console.log(err)
-        res.contentType('image/jpeg' || 'image/png');
+        res.contentType('image/jpeg' || 'image/png' || 'image/jpg');
         res.send(result.image)
+        console.log(req.file.path)
     });
 });
 
