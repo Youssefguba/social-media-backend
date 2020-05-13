@@ -173,29 +173,29 @@ home.post(['/:postId/reactions', '/users/:userId/:postId/reactions'], async (req
     let user_info  = await User.findById(req.params.userId).select("id username");
     let mainUser = await User.findById(req.params.userId);
     await Post.findById(req.params.postId).exec(async (err, post) => {
-        /*
-         * We made this to make changes happen in database when user click on "Ameen" button..
-         * */
-        // (*) Check if the user is the owner of post or not..
-        // (1) If the user is /not/ the owner..
-       if (!(mainUser.posts.id(req.params.postId))) {
-            await User.findById(post.authorId).exec(async (err, user) => {
-               await user.posts.id(req.params.postId).ameenReaction.push(user_info);
-               await post.ameenReaction.push(user_info)
-                await mainUser.save();
+        if (res.status(200)) {
+            // ** We made this to make changes happen in database when user click on "Ameen" button.. ** //
+            // (*) Check if the user is the owner of post or not..
+            // (1) If the user is /not/ the owner..
+            if (!(mainUser.posts.id(req.params.postId))) {
+                await User.findById(post.authorId).exec(async (err, user) => {
+                    await user.posts.id(req.params.postId).ameenReaction.push(user_info);
+                    await post.ameenReaction.push(user_info)
+                    await mainUser.save();
+                    await user_info.save();
+                    await post.save();
+                });
+                //.. then find the place of post in User collection to push post to the list..
+            } else {
+                // (2) If the user is the Owner..
+                await mainUser.posts.id(req.params.postId).ameenReaction.push(user_info);
+                await post.ameenReaction.push(user_info)
                 await user_info.save();
-
-
-            });
-           //.. then find the place of post in User collection to push post to the list..
-       } else {
-           // (2) If the user is the Owner..
-           await mainUser.posts.id(req.params.postId).ameenReaction.push(user_info);
-           await post.ameenReaction.push(user_info)
-           await user_info.save();
-           await mainUser.save();
-       }
-       await post.save();
+                await mainUser.save();
+                await post.save();
+            }
+        }
+        res.send(user_info);
    });
 });
 
@@ -206,28 +206,30 @@ home.post(['/:postId/reactions', '/users/:userId/:postId/reactions'], async (req
     let user_info  = await User.findById(req.params.userId).select("id username");
     let mainUser = await User.findById(req.params.userId);
     await Post.findById(req.params.postId).exec(async (err, post) => {
-        /*
-         * We made this to make changes happen in database when user click on "Ameen" button..
-         * */
-        // (*) Check if the user is the owner of post or not..
-        // (1) If the user is /not/ the owner..
-        if (!(mainUser.posts.id(req.params.postId))) {
-            await User.findById(post.authorId).exec(async (err, user) => {
-                await user.posts.id(req.params.postId).recommendReaction.push(user_info);
+
+        if (res.status(200)){
+            // ** We made this to make changes happen in database when user click on "Ameen" button.. ** //
+            // (*) Check if the user is the owner of post or not..
+            // (1) If the user is /not/ the owner..
+            if (!(mainUser.posts.id(req.params.postId))) {
+                await User.findById(post.authorId).exec(async (err, user) => {
+                    await user.posts.id(req.params.postId).recommendReaction.push(user_info);
+                    await post.recommendReaction.push(user_info)
+                    await mainUser.save();
+                    await user_info.save();
+
+
+                });
+                //.. then find the place of post in User collection to push post to the list..
+            } else {
+                // (2) If the user is the Owner..
+                await mainUser.posts.id(req.params.postId).recommendReaction.push(user_info);
                 await post.recommendReaction.push(user_info)
-                await mainUser.save();
                 await user_info.save();
-
-
-            });
-            //.. then find the place of post in User collection to push post to the list..
-        } else {
-            // (2) If the user is the Owner..
-            await mainUser.posts.id(req.params.postId).recommendReaction.push(user_info);
-            await post.recommendReaction.push(user_info)
-            await user_info.save();
-            await mainUser.save();
+                await mainUser.save();
+            }
         }
+
         await post.save();
     });
 });
