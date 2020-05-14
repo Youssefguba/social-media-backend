@@ -4,8 +4,9 @@ const { User, userSchema } = require("../models/user");
 
 const reactionsSchema = new mongoose.Schema({
     username: String,
+    userId: mongoose.Schema.Types.ObjectId,
     profilePic: String,
-
+    postId: mongoose.Schema.Types.ObjectId,
 });
 
 const commentSchema = new mongoose.Schema({
