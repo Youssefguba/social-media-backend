@@ -57,6 +57,13 @@ home.get('/users/:userId/:postId', async (req, res) => {
     });
 })
 
+/*
+* Get Post
+* */
+home.get('/:postId', async (req, res) => {
+    let posts = await Post.findById(req.params.postId);
+    res.send(posts)
+});
 
 /*
 * Update Post
@@ -93,7 +100,7 @@ home.delete(['/:postId','/users/:userId/:postId'], async (req, res) => {
 /*
 * Add comment
 * */
-home.post(['/:postId', '/users/:userId/:postId'], async (req, res) => {
+home.post(['/:postId/comments', '/users/:userId/:postId/comments'], async (req, res) => {
     await Post.findById(req.params.postId).exec(async (err, post) => {
         // Create a new comment..
         let newComment = new Comment({
@@ -122,7 +129,7 @@ home.post(['/:postId', '/users/:userId/:postId'], async (req, res) => {
 /*
 * Remove a comment
 * */
-home.delete(['/:postId/:commentId', '/users/:userId/:postId/:commentId'], async (req, res) => {
+home.delete(['/:postId/comments/:commentId', '/users/:userId/:postId/comments/:commentId'], async (req, res) => {
     await Post.findById(req.params.postId).exec(async (err, post) => {
         if (!post) return res.status(404).send("Post is not Found!")
         // Find comment by Id..
@@ -146,23 +153,13 @@ home.delete(['/:postId/:commentId', '/users/:userId/:postId/:commentId'], async 
     res.send(comment);
 })
 
-
-/*
-* Get Post
-* */
-home.get('/:postId', async (req, res) => {
-    let posts = await Post.findById(req.params.postId);
-    res.send(posts)
-});
-
-
 /*
 * Get Comment of post
 * */
-home.get('/:postId/:commentId', async (req, res) => {
-     let comment = await Post.findById(req.params.postId).then(post =>
-         post.comments.findById(req.params.commentId)
-     );
+home.get('/:postId/comments/:commentId', async (req, res) => {
+    let comment = await Post.findById(req.params.postId).then(post =>
+        post.comments.findById(req.params.commentId)
+    );
     res.send(comment)
 });
 
@@ -240,7 +237,6 @@ home.post(['/:postId/reactions', '/users/:userId/:postId/reactions'], async (req
     });
 });
 
-
 /*
 * React with Forbidden
 * */
@@ -272,6 +268,16 @@ home.post(['/:postId/reactions', '/users/:userId/:postId/reactions'], async (req
         }
         await post.save();
     });
+});
+
+/*
+* Get Ameen Reaction
+* */
+home.get(['/:postId/reactions/:reactionId', '/users/:userId/:postId/reactions/:reactionId'], async (req, res) => {
+   await Post.findById(req.params.postId).then(post => {
+       res.send( post.ameenReaction.findOne("userId"));
+    }
+   );
 });
 
 module.exports = home;

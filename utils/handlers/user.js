@@ -361,13 +361,13 @@ async function recommendButton(userId, postId) {
     // (1) If the user is /not/ the owner..
     if (!(mainUser.posts.id(postId))) {
         //.. then find the place of post in User collection to push post to the list..
-            await _user.posts.id(postId).reactions.recommended.push(user_info);
-            await post.reactions.recommended.push(user_info)
+            await _user.posts.id(postId).recommendReaction.push(user_info);
+            await post.recommendReaction.push(user_info)
     } else {
         // (2) If the user is the Owner..
             // Check if already the user liked this post before or not.
-                await mainUser.posts.id(postId).reactions.recommended.push(user_info);
-                await post.reactions.recommended.push(user_info)
+                await mainUser.posts.id(postId).recommendReaction.push(user_info);
+                await post.recommendReaction.push(user_info)
     }
     await mainUser.save();
     await post.save();
@@ -390,12 +390,12 @@ async function forbiddenButton(userId, postId) {
     // (1) If the user is /not/ the owner..
     if (!(mainUser.posts.id(postId))) {
         //.. then find the place of post in User collection to push post to the list..
-            await _user.posts.id(postId).reactions.forbidden.push(user_info);
-            await post.reactions.forbidden.push(user_info)
+            await _user.posts.id(postId).forbiddenReaction.push(user_info);
+            await post.forbiddenReaction.push(user_info)
     } else {
         // (2) If the user is the Owner..
-                await mainUser.posts.id(postId).reactions.forbidden.push(user_info);
-                await post.reactions.forbidden.push(user_info)
+                await mainUser.posts.id(postId).forbiddenReaction.push(user_info);
+                await post.forbiddenReaction.push(user_info)
             }
     await mainUser.save();
     await post.save();
@@ -424,10 +424,10 @@ async function removeAmeenReaction(userId, postId) {
 
     if (!(mainUser.posts.id(postId))) {
         // .. then find the place of post in User collection to push post to the list..
-       let userPosts = await _user.posts.id(postId).reactions.ameen.find(async function (reactions) {
+       let userPosts = await _user.posts.id(postId).ameenReaction.find(async function (reactions) {
             return reactions._id
         })
-       let posts = await post.reactions.ameen.find(async function (reactions) {
+       let posts = await post.ameenReaction.find(async function (reactions) {
             return reactions._id
         })
         userPosts.remove();
@@ -435,10 +435,10 @@ async function removeAmeenReaction(userId, postId) {
 
     } else {
         // (2) If the user is the Owner..
-        let userPosts = await mainUser.posts.id(postId).reactions.ameen.find(async function (reactions) {
+        let userPosts = await mainUser.posts.id(postId).ameenReaction.find(async function (reactions) {
             return reactions._id
         })
-        let posts = await post.reactions.ameen.find(async function (reactions) {
+        let posts = await post.ameenReaction.find(async function (reactions) {
             return reactions._id
         })
         userPosts.remove();
@@ -466,10 +466,10 @@ async function removeRecommendReaction(userId, postId) {
 
     if (!(mainUser.posts.id(postId))) {
         // .. then find the place of post in User collection to push post to the list..
-        let userPosts = await _user.posts.id(postId).reactions.recommended.find(async function (reactions) {
+        let userPosts = await _user.posts.id(postId).recommendReaction.find(async function (reactions) {
             return reactions._id
         })
-        let posts = await post.reactions.recommended.find(async function (reactions) {
+        let posts = await post.recommendReaction.find(async function (reactions) {
             return reactions._id
         })
         userPosts.remove();
@@ -477,10 +477,10 @@ async function removeRecommendReaction(userId, postId) {
 
     } else {
         // (2) If the user is the Owner..
-        let userPosts = await mainUser.posts.id(postId).reactions.recommended.find(async function (reactions) {
+        let userPosts = await mainUser.posts.id(postId).recommendReaction.find(async function (reactions) {
             return reactions._id
         })
-        let posts = await post.reactions.recommended.find(async function (reactions) {
+        let posts = await post.recommendReaction.find(async function (reactions) {
             return reactions._id
         })
         userPosts.remove();
@@ -508,10 +508,10 @@ async function removeForbiddenReaction(userId, postId) {
 
     if (!(mainUser.posts.id(postId))) {
         // .. then find the place of post in User collection to push post to the list..
-        let userPosts = await _user.posts.id(postId).reactions.forbidden.find(async function (reactions) {
+        let userPosts = await _user.posts.id(postId).forbiddenReaction.find(async function (reactions) {
             return reactions._id
         })
-        let posts = await post.reactions.forbidden.find(async function (reactions) {
+        let posts = await post.forbiddenReaction.find(async function (reactions) {
             return reactions._id
         })
         userPosts.remove();
@@ -519,10 +519,10 @@ async function removeForbiddenReaction(userId, postId) {
 
     } else {
         // (2) If the user is the Owner..
-        let userPosts = await mainUser.posts.id(postId).reactions.forbidden.find(async function (reactions) {
+        let userPosts = await mainUser.posts.id(postId).forbiddenReaction.find(async function (reactions) {
             return reactions._id
         })
-        let posts = await post.reactions.forbidden.find(async function (reactions) {
+        let posts = await post.forbiddenReaction.find(async function (reactions) {
             return reactions._id
         })
         userPosts.remove();

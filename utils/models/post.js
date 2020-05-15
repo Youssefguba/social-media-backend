@@ -3,6 +3,7 @@ const Joi = require('@hapi/joi');
 const { User, userSchema } = require("../models/user");
 
 const reactionsSchema = new mongoose.Schema({
+    reactionId: mongoose.Schema.Types.ObjectId,
     username: String,
     userId: mongoose.Schema.Types.ObjectId,
     profilePic: String,
