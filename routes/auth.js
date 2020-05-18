@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { User } = require('../utils/models/user');
+const { User, validateUser } = require('../utils/models/user');
 const verifyToken = require('../controllers/verifyToken');
 
 const jwt = require('jsonwebtoken');
@@ -17,6 +17,7 @@ router.post('/signup', async (req, res) => {
 			password,
 		});
 		user.password = await User.generateHash(password);
+		await validateUser(user);
 		await user.save();
 
 		const token = jwt.sign({id: user._id}, config.secret, {

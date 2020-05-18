@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     username:   String,    //username
     first_name: String,
     last_name:  String,
-    email: {type: String, unique: true},   //email
+    email: {type: String, unique: true, lowercase: true},   //email
     password:   String,
     birthday:   String,    //birthday
     posts: [postSchema],
@@ -46,14 +46,12 @@ userSchema.methods.validPassword = function(password){
 }
 
 /* Validation User within response to the server */
-function validateUser(post){
+function validateUser(user){
     const schema = Joi.object().keys({
-        username: Joi.string().required(),
-        email: Joi.string().required(),
-        password: Joi.string().required(),
-        isAdmin: Joi.boolean().required()
+        username: Joi.toString(),
+        email: Joi.string().email().lowercase().required(),
     });
-    schema.validate(post)
+    schema.validate(user)
 }
 
 
