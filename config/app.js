@@ -15,5 +15,6 @@ module.exports = {
     version:"1.0.0",
     db:{
         connectionUri: `${dbHost}`
-    }
+    },
+    secret: 'mysecrettoken',
 };
