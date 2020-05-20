@@ -52,6 +52,8 @@ router.post('/signin', async (req, res) => {
 			expiresIn: "24h",
 		});
 		res.status(200).json({auth: true, token});
+		res.status(200).send(user._id);
+		// It is a new Comment
 	} catch (e) {
 		console.log(e);
 		res.status(500).send('There was a Sign In problem.')
