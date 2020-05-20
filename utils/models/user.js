@@ -48,8 +48,8 @@ userSchema.methods.validPassword = function(password){
 /* Validation User within response to the server */
 function validateUser(user){
     const schema = Joi.object().keys({
-        username: Joi.toString(),
-        email: Joi.string().email().lowercase().required(),
+        username: Joi.toString().trim(),
+        email: Joi.string().email().lowercase().trim().required(),
     });
     schema.validate(user)
 }
