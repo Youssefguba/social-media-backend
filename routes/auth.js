@@ -51,8 +51,8 @@ router.post('/signin', async (req, res) => {
 			const token = jwt.sign({id: user._id}, config.secret, {
 				expiresIn: "24h",
 			});
-			res.status(200).json({auth: true, token});
-			res.status(200).send({id: user._id});
+			res.status(200).json({auth: true, token, userId: user._id});
+			// res.status(200).send({id: user._id});
 		});
 	} catch (e) {
 		console.log(e);
