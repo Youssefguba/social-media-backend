@@ -17,13 +17,21 @@ router.post('/signup', async (req, res) => {
 			password,
 		});
 		user.password = await User.generateHash(password);
-		await validateUser(user);
-		await user.save();
-
-		const token = jwt.sign({id: user._id}, config.secret, {
-			expiresIn: "24h",
+		/// Check if the Email is existed or not ..
+		User.findOne({'email': email}).exec(async (err, email) => {
+			if (email) {
+				res.status(409).send('User is Already Exist');
+			} else {
+				await validateUser(user);
+				await user.save();
+				const token = jwt.sign({id: user._id}, config.secret, {
+					expiresIn: "24h",
+				});
+				res.status(200).json({auth: true, token});
+			}
 		});
-		res.status(200).json({auth: true, token});
+
+
 	} catch (e) {
 		console.log(e);
 		res.status(500).send('There was a problem sign up')
