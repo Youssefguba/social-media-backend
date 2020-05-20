@@ -51,8 +51,7 @@ router.post('/signin', async (req, res) => {
 		const token = jwt.sign({id: user._id}, config.secret, {
 			expiresIn: "24h",
 		});
-		res.status(200).json({auth: true, token});
-		res.status(200).send(user._id);
+		res.status(200).json({auth: true, token}, {userId: user._id});
 		// It is a new Comment
 	} catch (e) {
 		console.log(e);
