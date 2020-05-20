@@ -40,20 +40,20 @@ router.post('/signup', async (req, res) => {
 
 router.post('/signin', async (req, res) => {
 	try{
-		const user = await User.findOne({email: req.body.email});
-		if (!user) {
-			res.status(404).send('The email does not exist!');
-		}
-		const validPassword = await user.validPassword(req.body.password, user.password );
-		if (!validPassword) {
-			return res.status(401).send({auth: false, token: null});
-		}
-		const token = jwt.sign({id: user._id}, config.secret, {
-			expiresIn: "24h",
+		await User.findOne({email: req.body.email}).exec(async (err, user) => {
+			if (!user) {
+				res.status(404).send('The email does not exist!');
+			}
+			const validPassword = await user.validPassword(req.body.password, user.password );
+			if (!validPassword) {
+				return res.status(401).send({auth: false, token: null});
+			}
+			const token = jwt.sign({id: user._id}, config.secret, {
+				expiresIn: "24h",
+			});
+			res.status(200).json({auth: true, token});
+			res.status(200).json({userId: user._id});
 		});
-		res.status(200).json({auth: true, token});
-		res.status(200).json({userId: user._id});
-		// It is a new Comment
 	} catch (e) {
 		console.log(e);
 		res.status(500).send('There was a Sign In problem.')
