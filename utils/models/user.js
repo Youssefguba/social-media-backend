@@ -5,11 +5,11 @@ const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
     userId: mongoose.Schema.Types.ObjectId,
-    username:   String,    //username
+    username:   {type: String, trim: true},    //username
     first_name: String,
     last_name:  String,
-    email: {type: String, unique: true, lowercase: true},   //email
-    password:   String,
+    email: {type: String, unique: true, lowercase: true, trim: true},   //email
+    password:   {type: String, trim: true},
     birthday:   String,    //birthday
     posts: [postSchema],
     saved_posts: [postSchema],
