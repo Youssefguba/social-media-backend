@@ -315,8 +315,10 @@ home.delete(['/:postId/reactions/:reactionId', '/users/:userId/:postId/reactions
                 await post.save();
             });
         }
+        await post.save();
+        await mainUser.save();
+
     });
-    await mainUser.save();
 
 });
 
