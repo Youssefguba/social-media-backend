@@ -304,22 +304,17 @@ home.delete(['/:postId/reactions/:reactionId', '/users/:userId/:postId/reactions
 
         } else if (mainUser.posts.id(req.params.postId)) {
             // (2) If the user is the Owner..
-            await User.findById(post.authorId).exec(async (err, user) => {
-                let userPostReaction = await user.posts.id(req.params.postId).ameenReaction.id(req.params.reactionId);
+            await User.findById(req.params.userId).exec(async (err, user) => {
+                await user.posts.id(req.params.postId).ameenReaction.id(req.params.reactionId);
                 let postReaction = await post.ameenReaction.id(req.params.reactionId);
-                await userPostReaction.remove();
-                await user.save();
+                // await userPostReaction.remove();
                 await postReaction.remove();
-                await mainUser.save();
                 await post.save();
+                await user.save();
             });
         }
-        await post.save();
-        await mainUser.save();
         res.send(post);
-
     });
-
 });
 
 module.exports = home;

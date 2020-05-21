@@ -5,7 +5,7 @@ const { User, userSchema } = require("../models/user");
 const reactionsSchema = new mongoose.Schema({
     reactionId: mongoose.Schema.Types.ObjectId,
     username: String,
-    userId: mongoose.Schema.Types.ObjectId,
+    user_Id: mongoose.Schema.Types.ObjectId,
     profilePic: String,
     postId: mongoose.Schema.Types.ObjectId,
 });
