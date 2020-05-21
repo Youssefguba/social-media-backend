@@ -170,6 +170,7 @@ home.post(['/:postId/reactions', '/users/:userId/:postId/reactions'], async (req
     let mainUser = await User.findById(req.params.userId);
     await Post.findById(req.params.postId).exec(async (err, post) => {
         let newReaction = Reaction({
+            _id: mainUser.id,
             username: mainUser.username,
             userId: mainUser.id,
             postId: req.params.postId,
@@ -305,10 +306,10 @@ home.delete(['/:postId/reactions/:reactionId', '/users/:userId/:postId/reactions
         } else if (mainUser.posts.id(req.params.postId)) {
             // (2) If the user is the Owner..
             await User.findById(req.params.userId).exec(async (err, user) => {
-                await user.posts.id(req.params.postId).ameenReaction.id(req.params.reactionId);
+                let userPostReaction = await user.posts.id(req.params.postId).ameenReaction.id(req.params.reactionId);
                 let postReaction = await post.ameenReaction.id(req.params.reactionId);
-                // await userPostReaction.remove();
                 await postReaction.remove();
+                await userPostReaction.remove();
                 await post.save();
                 await user.save();
             });
