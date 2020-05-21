@@ -294,7 +294,6 @@ home.delete(['/:postId/reactions/:reactionId', '/users/:userId/:postId/reactions
         // .. then find the place of post in User collection to push post to the list..
          await User.findById(post.authorId).exec(async (err, user) => {
              let userPostReaction = await user.posts.id(req.params.postId).ameenReaction.id(req.params.reactionId);
-             console.log("Reaction", userPostReaction);
              await userPostReaction.remove();
              await user.save();
              await mainUser.save();
@@ -307,15 +306,18 @@ home.delete(['/:postId/reactions/:reactionId', '/users/:userId/:postId/reactions
 
     } else {
         // (2) If the user is the Owner..
-        let userPostReaction = await mainUser.posts.id(req.params.postId).ameenReaction.id(req.params.reactionId);
-        let postReaction = await post.ameenReaction.id(req.params.reactionId);
-        await userPostReaction.remove();
-        await postReaction.remove();
-        await mainUser.save();
-        await post.save();
+        await User.findById(req.params.userId).exec(async (err, user) => {
+            let userPostReaction = await user.posts.id(req.params.postId).ameenReaction.id(req.params.reactionId);
+            let postReaction = await post.ameenReaction.id(req.params.reactionId);
+            await userPostReaction.remove();
+            await user.save();
+            await postReaction.remove();
+            await mainUser.save();
+            await post.save();
+        });
     }
-    await mainUser.save();
-    await post.save();
+    // await mainUser.save();
+    // await post.save();
 });
 
 module.exports = home;
