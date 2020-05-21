@@ -293,28 +293,28 @@ home.delete(['/:postId/reactions/:reactionId', '/users/:userId/:postId/reactions
     if (!(mainUser.posts.id(req.params.postId))) {
         // .. then find the place of post in User collection to push post to the list..
          await User.findById(post.authorId).exec(async (err, user) => {
-             let reactionsPost = await user.posts.id(req.params.postId).ameenReaction.id(req.params.reactionId);
-             console.log("Reaction", reactionsPost);
-             reactionsPost.remove();
-             user.save();
+             let userPostReaction = await user.posts.id(req.params.postId).ameenReaction.id(req.params.reactionId);
+             console.log("Reaction", userPostReaction);
+             await userPostReaction.remove();
+             await user.save();
+             await mainUser.save();
+             await post.save();
          });
-        let posts = await post.ameenReaction.id(req.params.reactionId);
-        posts.remove();
+        let postReaction = await post.ameenReaction.id(req.params.reactionId);
+        await postReaction.remove();
         await mainUser.save();
         await post.save();
 
     } else {
         // (2) If the user is the Owner..
-        let userPosts = await mainUser.posts.id(req.params.postId).ameenReaction.id(req.params.reactionId)
-        let posts = await post.ameenReaction.id(req.params.reactionId);
-        userPosts.remove();
-        posts.remove();
+        let userPostReaction = await mainUser.posts.id(req.params.postId).ameenReaction.id(req.params.reactionId);
+        let postReaction = await post.ameenReaction.id(req.params.reactionId);
+        await userPostReaction.remove();
+        await postReaction.remove();
         await mainUser.save();
         await post.save();
     }
 
 });
-
-
 
 module.exports = home;
