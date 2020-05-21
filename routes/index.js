@@ -187,7 +187,7 @@ home.post(['/:postId/reactions', '/users/:userId/:postId/reactions'], async (req
                     await user.save();
                 });
                 //.. then find the place of post in User collection to push post to the list..
-            } else {
+            } else if ((mainUser.posts.id(req.params.postId))) {
                 // (2) If the user is the Owner..
                 await mainUser.posts.id(req.params.postId).ameenReaction.push(newReaction);
                 await post.ameenReaction.push(newReaction);
@@ -287,7 +287,6 @@ home.delete(['/:postId/reactions/:reactionId', '/users/:userId/:postId/reactions
     // (*) Check if the user is the owner of post or not..
     // (1) If the user is /not/ the owner..
     await Post.findById(req.params.postId).exec(async (err, post) => {
-
         //TODO remove the reaction of the user that liked the post ..
         if (!(mainUser.posts.id(req.params.postId))) {
             // .. then find the place of post in User collection to push post to the list..
@@ -317,6 +316,7 @@ home.delete(['/:postId/reactions/:reactionId', '/users/:userId/:postId/reactions
         }
         await post.save();
         await mainUser.save();
+        res.send(post);
 
     });
 
