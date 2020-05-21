@@ -280,42 +280,42 @@ home.get(['/:postId/reactions/:reactionId', '/users/:userId/:postId/reactions/:r
 * */
 home.delete(['/:postId/reactions/:reactionId', '/users/:userId/:postId/reactions/:reactionId'], async (req, res) =>{
     let mainUser   = await User.findById(req.params.userId);
-    let post  = await Post.findById(req.params.postId);
-    // let _user = await User.findById(post.authorId);
     // TODO (1) => Check if the user liked this post or not!
     /*
     * We made this to make changes happen in database when user click on "Ameen" button..
     * */
     // (*) Check if the user is the owner of post or not..
     // (1) If the user is /not/ the owner..
+    await Post.findById(req.params.postId).exec(async (err, post) => {
 
-    //TODO remove the reaction of the user that liked the post ..
-    if (!(mainUser.posts.id(req.params.postId))) {
-        // .. then find the place of post in User collection to push post to the list..
-         await User.findById(post.authorId).exec(async (err, user) => {
-             let userPostReaction = await user.posts.id(req.params.postId).ameenReaction.id(req.params.reactionId);
-             await userPostReaction.remove();
-             await user.save();
-             await mainUser.save();
-             await post.save();
-         });
-        let postReaction = await post.ameenReaction.id(req.params.reactionId);
-        await postReaction.remove();
-        await mainUser.save();
-        await post.save();
-
-    } else {
-        // (2) If the user is the Owner..
-        await User.findById(req.params.userId).exec(async (err, user) => {
-            let userPostReaction = await user.posts.id(req.params.postId).ameenReaction.id(req.params.reactionId);
+        //TODO remove the reaction of the user that liked the post ..
+        if (!(mainUser.posts.id(req.params.postId))) {
+            // .. then find the place of post in User collection to push post to the list..
+            await User.findById(post.authorId).exec(async (err, user) => {
+                let userPostReaction = await user.posts.id(req.params.postId).ameenReaction.id(req.params.reactionId);
+                await userPostReaction.remove();
+                await user.save();
+                await mainUser.save();
+                await post.save();
+            });
             let postReaction = await post.ameenReaction.id(req.params.reactionId);
-            await userPostReaction.remove();
-            await user.save();
             await postReaction.remove();
             await mainUser.save();
             await post.save();
-        });
-    }
+
+        } else {
+            // (2) If the user is the Owner..
+            await User.findById(req.params.userId).exec(async (err, user) => {
+                let userPostReaction = await user.posts.id(req.params.postId).ameenReaction.id(req.params.reactionId);
+                let postReaction = await post.ameenReaction.id(req.params.reactionId);
+                await userPostReaction.remove();
+                await user.save();
+                await postReaction.remove();
+                await mainUser.save();
+                await post.save();
+            });
+        }
+    });
     // await mainUser.save();
     // await post.save();
 });
