@@ -314,7 +314,8 @@ home.delete(['/:postId/reactions/:reactionId', '/users/:userId/:postId/reactions
         await mainUser.save();
         await post.save();
     }
-
+    await mainUser.save();
+    await post.save();
 });
 
 module.exports = home;
