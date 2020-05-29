@@ -52,8 +52,7 @@ user.post('/', async (req, res) => {
 
 // Get a specific user with his info.
 user.get('/:userId', async (req, res) => {
-   let user = await User.findById(req.params.userId)
-       .select('username email posts');
+   let user = await User.findById(req.params.userId);
    if (!user) return res.status(404).send('User is not found!.');
    res.send(user);
 });
@@ -80,11 +79,11 @@ user.get('/:userId/following', async (req, res) => {
 /*
 * Get list of user saved post.
 * */
-user.get('/:userId/saved', async (req, res) => {
-    let user = await User.findById(req.params.userId).select('saved_posts');
-    if (!user) return res.status(404).send('User is not found!.');
-    res.send(user);
-})
+// user.get('/:userId/saved', async (req, res) => {
+//     let user = await User.findById(req.params.userId).select('saved_posts');
+//     if (!user) return res.status(404).send('User is not found!.');
+//     res.send(user);
+// })
 
 // Add image to user and encoded it
 user.post('/:userId/images', upload.single('image'), async (req, res) => {

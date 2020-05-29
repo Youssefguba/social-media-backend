@@ -96,6 +96,14 @@ home.delete(['/:postId','/users/:userId/:postId'], async (req, res) => {
     res.send(post);
 });
 
+/* Save Post to Saved List*/
+// home.get(['/:postId','/users/:userId/savedPosts'], async (req, res) =>{
+//     let savedPost = await Post.findById(req.params.postId);
+//     await User.findById(req.params.userId).exec((err, user) => {
+//         user.saved_posts.push(savedPost);
+//         res.send(savedPost);
+//     });
+// });
 
 /*
 * Add comment
@@ -317,5 +325,6 @@ home.delete(['/:postId/reactions/:reactionId', '/users/:userId/:postId/reactions
         res.send(post);
     });
 });
+
 
 module.exports = home;
